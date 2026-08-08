@@ -1,11 +1,3 @@
-# Lavender
-
-## About
-
-TBA
-
-
-----------------------------------
 # Example Mod
 
 ## Setup
