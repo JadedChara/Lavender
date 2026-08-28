@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "lavender",
 	"version": "${version}",
-	"name": "Example Mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Lavender",
+	"description": "Totally inconspicuous decoration mod!",
 	"authors": [
 		"Me!"
 	],
@@ -12,22 +12,21 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/modid/icon.png",
+	"icon": "assets/lavender/icon.png",
 	"environment": "*",
 	"entrypoints": {
+		"fabric-datagen": [
+			"io.github.jadedchara.lavender.datagen.LavenderDataGenerator"
+		],
 		"main": [
-			"com.example.ExampleMod"
+			"io.github.jadedchara.lavender.Lavender"
 		],
 		"client": [
-			"com.example.client.ExampleModClient"
+			"io.github.jadedchara.lavender.client.LavenderClient"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
+		"lavender.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.3",
