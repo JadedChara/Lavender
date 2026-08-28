@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "lavender:block/lavender_glazed_terracotta"
+  }
+}
