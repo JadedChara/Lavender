@@ -1,4 +1,4 @@
-package com.example.client.mixin;
+package io.github.jadedchara.lavender.mixin.client;
 
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
