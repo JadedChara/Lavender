@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "lavender:block/orange_cream_stained_glass"
-  }
-}
