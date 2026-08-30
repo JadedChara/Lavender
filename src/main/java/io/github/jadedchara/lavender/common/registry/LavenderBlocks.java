@@ -2,6 +2,8 @@ package io.github.jadedchara.lavender.common.registry;
 
 import io.github.jadedchara.lavender.Lavender;
 import io.github.jadedchara.lavender.common.util.LavenderColors;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -41,6 +43,12 @@ public class LavenderBlocks {
         BlockItem be = new BlockItem(block, new Item.Properties().tab(tab));
         Registry.register(Registry.ITEM, Lavender.id(internalName),be);
         LAVENDER_BLOCKS.add(block);
+        System.out.println("Registered " + Lavender.id(internalName));
+        return Registry.register(Registry.BLOCK,Lavender.id(internalName),block);
+    }
+    public static Block registerOnlyBlock(Block block, String internalName){
+        LAVENDER_BLOCKS.add(block);
+        System.out.println("Registered " + Lavender.id(internalName));
         return Registry.register(Registry.BLOCK,Lavender.id(internalName),block);
     }
 
@@ -205,7 +213,7 @@ public class LavenderBlocks {
             //CANDLE INIT
             ;
             //CANDLE AND CANDLE CAKE INIT
-            registerBlockItem(
+            registerOnlyBlock(
                     new CandleCakeBlock(
                             registerBlockItem(
                                     new CandleBlock(
@@ -221,8 +229,7 @@ public class LavenderBlocks {
                             ),
                             BlockBehaviour.Properties.copy(Blocks.CANDLE_CAKE)
                     ),
-                    String.join("",color.getName(),"_candle_cake"),
-                    null
+                    String.join("",color.getName(),"_candle_cake")
             );
         }
     }

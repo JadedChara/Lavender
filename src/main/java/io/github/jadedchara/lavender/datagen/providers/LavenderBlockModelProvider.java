@@ -37,7 +37,6 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
                     || block.getName().getString().endsWith("_concrete_powder")
                     || block.getName().getString().endsWith("_wool")
             ) {
-                System.out.println(block.getName());
                 generators.createTrivialCube(block);
             } else if (
                     block.getName().getString().endsWith("stained_glass")
@@ -50,8 +49,10 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
             } else if (
                     block.getName().getString().endsWith("_candle")
             ) {
+                //System.out.println("Candle:" + block.getName().getString());
                 for(Block b : LavenderBlocks.LAVENDER_BLOCKS){
-                    if(b.getName().getString() == block.getName().getString()+"_cake"){
+                    if(b.getName().getString().equals(block.getName().getString()+"_cake")){
+                        //System.out.println(block.getName().getString() + " : " + b.getName().getString());
                         generators.createCandleAndCandleCake(block,b);
                     }
                 }
@@ -59,7 +60,7 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
                     block.getName().getString().endsWith("_bed")
             ) {
                 for(Block b : LavenderBlocks.LAVENDER_BLOCKS){
-                    if(b.getName().getString() == block.getName().getString()+"_wool"){
+                    if(b.getName().getString().equals(block.getName().getString()+"_wool")){
                         generators.createBedItem(block,b);
                     }
                 }

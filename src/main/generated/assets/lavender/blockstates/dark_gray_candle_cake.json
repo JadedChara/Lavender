@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "lavender:block/dark_gray_candle_cake"
+    },
+    "lit=true": {
+      "model": "lavender:block/dark_gray_candle_cake_lit"
+    }
+  }
+}
