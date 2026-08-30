@@ -1,6 +1,9 @@
 package io.github.jadedchara.lavender.mixin.common;
 
+import io.github.jadedchara.lavender.Lavender;
+import net.minecraft.Util;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
@@ -68,31 +71,6 @@ public abstract class SheepMixin extends Animal implements Shearable {
         entityData.set(DATA_WOOL_ID, (byte) ((b & 0x7F) | (sheared ? 0x80 : 0)));
     }
 
-    /*@Inject(method="getColor",at = @At("RETURN"),cancellable = true)
-    public void getFixedColor(CallbackInfoReturnable<DyeColor> cir) {
-        cir.setReturnValue(DyeColor.byId(this.entityData.get(DATA_WOOL_ID) & 0x7f));
-    }
-
-    @Inject(method="setColor",at=@At("HEAD"),cancellable = true)
-    public void setFixedColor(DyeColor c, CallbackInfo ci) {
-        byte b = this.entityData.get(DATA_WOOL_ID);
-        this.entityData.set(DATA_WOOL_ID, (byte)(b & 0x80 | c.getId() % 0x7f));
-        System.out.println(this.entityData.get(DATA_WOOL_ID));
-        ci.cancel();
-    }
-
-    @Inject(method="setSheared",at=@At("HEAD"),cancellable = true)
-    public void setFixedSheared(boolean bl, CallbackInfo ci) {
-        byte b = (Byte)this.entityData.get(DATA_WOOL_ID);
-        this.entityData.set(DATA_WOOL_ID, (byte) ((b & 0x7F) | (bl ? 0x80 : 0)));
-        ci.cancel();
-    }
-
-    @Inject(method="isSheared",at=@At("RETURN"),cancellable = true)
-    public void isFixedSheared(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue( ((Byte)this.entityData.get(DATA_WOOL_ID) & 0x80) != 0 );
-    }*/
-
     @Shadow
     @Nullable
     public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
@@ -100,5 +78,14 @@ public abstract class SheepMixin extends Animal implements Shearable {
         Sheep sheep2 = EntityType.SHEEP.create(serverLevel);
         sheep2.setColor(this.getOffspringColor(this,sheep));
         return sheep2;
+    }
+
+    @Inject(method = "getDefaultLootTable", at = @At(value = "HEAD"), cancellable = true)
+    private void tweakDefaultLootTable(CallbackInfoReturnable<ResourceLocation> cir) {
+        //Sheep $this = (Sheep) (Object) this;
+
+        if (!this.isSheared() && this.getColor().getId()>15) {
+            cir.setReturnValue(Lavender.id(this.getColor().getName()));
+        }
     }
 }
