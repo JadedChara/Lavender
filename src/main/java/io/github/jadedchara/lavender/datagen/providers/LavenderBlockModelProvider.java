@@ -35,7 +35,7 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
                     || block.getName().getString().endsWith("terracotta")
                     || block.getName().getString().endsWith("glazed_terracotta")
                     || block.getName().getString().endsWith("_concrete_powder")
-                    || block.getName().getString().endsWith("_wool")
+             
             ) {
                 generators.createTrivialCube(block);
             } else if (
@@ -60,7 +60,7 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
                     block.getName().getString().endsWith("_bed")
             ) {
                 for(Block b : LavenderBlocks.LAVENDER_BLOCKS){
-                    if(b.getName().getString().equals(block.getName().getString()+"_wool")){
+                    if(b.getName().getString().equals(block.getName().replaceAll("_bed","").getString()+"_wool")){
                         generators.createBedItem(block,b);
                     }
                 }
@@ -77,7 +77,7 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
                     block.getName().getString().endsWith("_wool")
             ){
                 for(Block b : LavenderBlocks.LAVENDER_BLOCKS){
-                    if(b.getName().getString() == block.getName().getString()+"_carpet"){
+                    if(b.getName().getString() == block.getName().getString().replaceAll("_wool","")+"_carpet"){
                         generators.createFullAndCarpetBlocks(block,b);
                     }
                 }
