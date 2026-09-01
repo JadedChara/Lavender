@@ -25,11 +25,11 @@ public enum LavenderColors implements StringRepresentable {
     MAROON(22,"maroon",0x800000,MaterialColor.NETHER,0x800000,0x800000),
     COPPER(23,"copper",0xa44322,MaterialColor.TERRACOTTA_ORANGE,0xa44322,0xa44322),
     DESERT_TAN(24,"desert_tan",0xd3b17d,MaterialColor.SAND,0xd3b17d,0xd3b17d),
-    PERIWINKLE(24,"periwinkle",0xc2ecf9,MaterialColor.COLOR_LIGHT_BLUE,0xc2ecf9,0xc2ecf9),
-    MUSTARD(25,"mustard",0xdcc066,MaterialColor.TERRACOTTA_YELLOW,0xdcc066,0xdcc066),
-    ORANGE_CREAM(26,"orange_cream",0xffb95a,MaterialColor.TERRACOTTA_ORANGE,0xffb95a,0xffb95a),
-    COFFEE(27,"coffee",0xb7794d,MaterialColor.TERRACOTTA_BROWN,0xb7794d,0xb7794d),
-    RASPBERRY(28,"raspberry",0x7f1734,MaterialColor.COLOR_PURPLE,0x7f1734,0x7f1734);
+    PERIWINKLE(25,"periwinkle",0xc2ecf9,MaterialColor.COLOR_LIGHT_BLUE,0xc2ecf9,0xc2ecf9),
+    MUSTARD(26,"mustard",0xdcc066,MaterialColor.TERRACOTTA_YELLOW,0xdcc066,0xdcc066),
+    ORANGE_CREAM(27,"orange_cream",0xffb95a,MaterialColor.TERRACOTTA_ORANGE,0xffb95a,0xffb95a),
+    COFFEE(28,"coffee",0xb7794d,MaterialColor.TERRACOTTA_BROWN,0xb7794d,0xb7794d),
+    RASPBERRY(29,"raspberry",0x7f1734,MaterialColor.COLOR_PURPLE,0x7f1734,0x7f1734);
     private final int id;
     private final String name;
     private final MaterialColor mapColor;

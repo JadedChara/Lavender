@@ -60,7 +60,7 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
                     block.getName().getString().endsWith("_bed")
             ) {
                 for(Block b : LavenderBlocks.LAVENDER_BLOCKS){
-                    if(b.getName().getString().equals(block.getName().replaceAll("_bed","").getString()+"_wool")){
+                    if(b.getName().getString().equals(block.getName().getString().replaceAll("_bed","")+"_wool")){
                         generators.createBedItem(block,b);
                     }
                 }

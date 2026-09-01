@@ -10,7 +10,8 @@
   ],
   "client": [
     "client.ExampleClientMixin",
-    "client.SheetsMixin"
+    "client.SheetsMixin",
+    "client.ShulkerBoxRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
