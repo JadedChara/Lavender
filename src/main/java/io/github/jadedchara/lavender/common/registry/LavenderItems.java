@@ -2,15 +2,16 @@ package io.github.jadedchara.lavender.common.registry;
 
 import io.github.jadedchara.lavender.Lavender;
 import io.github.jadedchara.lavender.common.util.LavenderColors;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
-import net.minecraft.world.level.block.Block;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LavenderItems {
 
-    public DyeItem[] DYES;
+    public static List<DyeItem> DYES = new ArrayList<>();
 
     //DYES
     //public static final DyeItem LAVENDER_DYE = registerDye("lavender_dye",DyeColor.byId(16));
@@ -28,7 +29,7 @@ public class LavenderItems {
     }
     public static void init(){
         for (LavenderColors color : LavenderColors.values()) {
-            registerDye(String.join("",color.getName(),"_dye"),DyeColor.byId(color.getId()));
+            DYES.add(registerDye(String.join("",color.getName(),"_dye"),DyeColor.byId(color.getId())));
         }
         //System.out.println("Registered " + LAVENDER_DYE.asItem().toString());
     }
