@@ -9,13 +9,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +28,10 @@ public class LavenderBlocks {
 
     public static List<Block> LAVENDER_BLOCKS = new ArrayList<>();
 
-    //WOOLS
+    public static List<BedBlock> BEDS = new ArrayList<>();
+    public static List<ShulkerBoxBlock> SHULKERS = new ArrayList<>();
+    public static List<BannerBlock> BANNERS = new ArrayList<>();
+    public static List<WallBannerBlock> WALLBANNERS = new ArrayList<>();
 
     //UTIL
     public static boolean returnFalse(BlockState bs, BlockGetter bg, BlockPos bp, EntityType<?> et){
@@ -43,6 +44,15 @@ public class LavenderBlocks {
         BlockItem be = new BlockItem(block, new Item.Properties().tab(tab));
         Registry.register(Registry.ITEM, Lavender.id(internalName),be);
         LAVENDER_BLOCKS.add(block);
+        if(block instanceof BedBlock b){
+            BEDS.add(b);
+        }else if(block instanceof BannerBlock b){
+            BANNERS.add(b);
+        }else if(block instanceof WallBannerBlock b){
+            WALLBANNERS.add(b);
+        }else if(block instanceof ShulkerBoxBlock b){
+            SHULKERS.add(b);
+        }
         System.out.println("Registered " + Lavender.id(internalName));
         return Registry.register(Registry.BLOCK,Lavender.id(internalName),block);
     }
@@ -50,6 +60,9 @@ public class LavenderBlocks {
         LAVENDER_BLOCKS.add(block);
         System.out.println("Registered " + Lavender.id(internalName));
         return Registry.register(Registry.BLOCK,Lavender.id(internalName),block);
+    }
+    public static BannerItem registerBanner(Block floor, Block wall,ResourceLocation id){
+        return Registry.register(Registry.ITEM,id ,new BannerItem(floor,wall,new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS)));
     }
 
     public static void init(){
@@ -155,7 +168,8 @@ public class LavenderBlocks {
                     new GlazedTerracottaBlock(
                             BlockBehaviour
                                     .Properties
-                                    .of(Material.STONE, color.get())
+                                    .copy(Blocks.WHITE_GLAZED_TERRACOTTA)
+                                    .color(color.getMapColor())
                                     .requiresCorrectToolForDrops()
                                     .strength(1.4F)),
                     String.join("",color.getName(),"_glazed_terracotta"),
@@ -197,19 +211,32 @@ public class LavenderBlocks {
 
             );
             //BANNER INIT
-            registerBlockItem(
-                    new BannerBlock(
-                            color.get(),
-                            BlockBehaviour
-                                    .Properties
-                                    .of(Material.WOOD)
-                                    .noCollission()
-                                    .strength(1.0F)
-                                    .sound(SoundType.WOOD)
+            registerBanner(
+                    registerOnlyBlock(
+                            new BannerBlock(
+                                    color.get(),
+                                    BlockBehaviour
+                                            .Properties
+                                            .copy(Blocks.WHITE_BANNER)
+                                            .noCollission()
+                                            .strength(1.0F)
+                                            .sound(SoundType.WOOD)
+                            ),
+                            String.join("",color.getName(),"_banner")
                     ),
-                    String.join("",color.getName(),"_banner"),
-                    CreativeModeTab.TAB_DECORATIONS
-            );
+                    registerOnlyBlock(
+                            new WallBannerBlock(
+                                    color.get(),
+                                    BlockBehaviour
+                                            .Properties
+                                            .copy(Blocks.WHITE_WALL_BANNER)
+                                            .noCollission()
+                                            .strength(1.0F)
+                                            .sound(SoundType.WOOD)
+
+                            ),
+                            String.join("",color.getName(),"_wall_banner")
+            ),Lavender.id(String.join("",color.getName(),"_banner")));
             //CANDLE INIT
             ;
             //CANDLE AND CANDLE CAKE INIT
@@ -232,6 +259,7 @@ public class LavenderBlocks {
                     String.join("",color.getName(),"_candle_cake")
             );
         }
+        //BlockEntityType.BED
     }
 
 

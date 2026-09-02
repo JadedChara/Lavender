@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/template_glazed_terracotta",
   "textures": {
-    "all": "lavender:block/desert_tan_glazed_terracotta"
+    "pattern": "lavender:block/desert_tan_glazed_terracotta"
   }
 }
