@@ -53,12 +53,12 @@ public class LavenderBlocks {
         }else if(block instanceof ShulkerBoxBlock b){
             SHULKERS.add(b);
         }
-        System.out.println("Registered " + Lavender.id(internalName));
+        //System.out.println("Registered " + Lavender.id(internalName));
         return Registry.register(Registry.BLOCK,Lavender.id(internalName),block);
     }
     public static Block registerOnlyBlock(Block block, String internalName){
         LAVENDER_BLOCKS.add(block);
-        System.out.println("Registered " + Lavender.id(internalName));
+        //System.out.println("Registered " + Lavender.id(internalName));
         return Registry.register(Registry.BLOCK,Lavender.id(internalName),block);
     }
     public static BannerItem registerBanner(Block floor, Block wall,ResourceLocation id){

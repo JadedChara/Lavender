@@ -1,6 +1,7 @@
 package io.github.jadedchara.lavender.datagen.providers;
 
 import io.github.jadedchara.lavender.common.registry.LavenderBlocks;
+import io.github.jadedchara.lavender.common.registry.LavenderItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.client.model.Model;
@@ -15,6 +16,7 @@ import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.data.models.model.TexturedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.*;
@@ -118,11 +120,18 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
     public void generateItemModels(ItemModelGenerators generators) {
         for (Block block : LavenderBlocks.LAVENDER_BLOCKS){
             if (
-                    block.getName().getString().endsWith("_banner")
+                    block.getName().getString().endsWith("_banner") && !(block instanceof WallBannerBlock)
             ) {
-                /*ModelTemplates.BANNER_INVENTORY.create(ModelLocationUtils.getModelLocation(block.asItem()),
+                ModelTemplates.BANNER_INVENTORY.create(ModelLocationUtils.getModelLocation(block.asItem()),
                         TextureMapping.particle(Blocks.OAK_PLANKS),
-                        generators.output);*/
+                        generators.output);
+            }
+            for(DyeItem dye: LavenderItems.DYES){
+                try{
+                    generators.generateFlatItem(dye,ModelTemplates.FLAT_ITEM);
+                }catch(Exception e){
+
+                }
             }
         }
     }
