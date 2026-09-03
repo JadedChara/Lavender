@@ -12,6 +12,7 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
+	"accessWidener": "lavender.accesswidener",
 	"icon": "assets/lavender/icon.png",
 	"environment": "*",
 	"entrypoints": {
