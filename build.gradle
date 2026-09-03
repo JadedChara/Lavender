@@ -14,15 +14,9 @@ repositories {
 	// for more information about repositories.
 }
 
-/*loom {
-	splitEnvironmentSourceSets()
-
-	mods {
-		"lavender" {
-			sourceSet sourceSets.main
-		}
-	}
-}*/
+loom {
+	accessWidenerPath = file("src/main/resources/lavender.accesswidener")
+}
 
 dependencies {
 	// To change the versions see the gradle.properties file

@@ -85,7 +85,9 @@ public abstract class SheepMixin extends Animal implements Shearable {
         //Sheep $this = (Sheep) (Object) this;
 
         if (!this.isSheared() && this.getColor().getId()>15) {
-            cir.setReturnValue(Lavender.id(this.getColor().getName()));
+            cir.setReturnValue(Lavender.id("entities/sheep/"+this.getColor().getName()));
         }
     }
+
+
 }
