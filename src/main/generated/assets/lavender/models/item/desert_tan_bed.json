@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/template_bed",
+  "textures": {
+    "particle": "lavender:block/desert_tan_wool"
+  }
+}

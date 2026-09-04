@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/template_bed",
+  "textures": {
+    "particle": "lavender:block/orange_cream_wool"
+  }
+}
