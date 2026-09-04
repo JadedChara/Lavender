@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "lavender:desert_tan_glazed_terracotta"
+  },
+  "result": "lavender:desert_tan_terracotta"
+}

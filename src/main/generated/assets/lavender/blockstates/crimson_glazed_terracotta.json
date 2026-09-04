@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "lavender:block/crimson_glazed_terracotta",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "lavender:block/crimson_glazed_terracotta",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "lavender:block/crimson_glazed_terracotta"
+    },
+    "facing=west": {
+      "model": "lavender:block/crimson_glazed_terracotta",
+      "y": 90
+    }
+  }
+}
