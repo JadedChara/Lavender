@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/template_glazed_terracotta",
-  "textures": {
-    "pattern": "lavender:block/periwinkle_glazed_terracotta"
-  }
-}
