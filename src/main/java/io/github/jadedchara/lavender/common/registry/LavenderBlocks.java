@@ -258,8 +258,22 @@ public class LavenderBlocks {
                     ),
                     String.join("",color.getName(),"_candle_cake")
             );
+
+            //===========================
+            //Non-Dye Blocks
+
         }
-        //BlockEntityType.BED
+        //IRON MESH
+        registerBlockItem(
+                new Block(
+                        BlockBehaviour
+                                .Properties
+                                .copy(Blocks.IRON_BLOCK)
+                                .requiresCorrectToolForDrops()
+                ),
+                "iron_mesh"
+                ,CreativeModeTab.TAB_DECORATIONS
+        );
     }
 
 

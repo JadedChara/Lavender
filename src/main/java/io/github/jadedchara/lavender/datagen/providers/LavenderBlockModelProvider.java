@@ -34,13 +34,11 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
                 Blocks.OAK_PLANKS
         );
         for(Block block: LavenderBlocks.LAVENDER_BLOCKS) {
-            //System.out.println(block);
             if (
                     block.getName().getString().endsWith("concrete")
                     || (block.getName().getString().endsWith("_terracotta") && !block.getName().getString().contains(
                             "glazed"))
                     || block.getName().getString().endsWith("_concrete_powder")
-             
             ) {
                 generators.createTrivialCube(block);
             } else if (
@@ -54,10 +52,8 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
             } else if (
                     block.getName().getString().endsWith("_candle")
             ) {
-                //System.out.println("Candle:" + block.getName().getString());
                 for(Block b : LavenderBlocks.LAVENDER_BLOCKS){
                     if(b.getName().getString().equals(block.getName().getString()+"_cake")){
-                        //System.out.println(block.getName().getString() + " : " + b.getName().getString());
                         generators.createCandleAndCandleCake(block,b);
                     }
                 }
@@ -71,8 +67,6 @@ public class LavenderBlockModelProvider extends FabricModelProvider {
                                 Blocks.OAK_PLANKS
                         ).createWithoutBlockItem(block);
                         generators.createBedItem(block,b);
-
-
                     }
                 }
             } else if (
