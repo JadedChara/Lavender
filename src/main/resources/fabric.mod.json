@@ -20,7 +20,9 @@
 			"io.github.jadedchara.lavender.datagen.LavenderDataGenerator"
 		],
 		"main": [
-			"io.github.jadedchara.lavender.Lavender"
+			"io.github.jadedchara.lavender.Lavender",
+			"io.github.jadedchara.ashfall.Ashfall",
+			"io.github.jadedchara.acelib.AceLib"
 		],
 		"client": [
 			"io.github.jadedchara.lavender.client.LavenderClient"
