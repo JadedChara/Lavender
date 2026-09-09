@@ -26,11 +26,18 @@
 		],
 		"client": [
 			"io.github.jadedchara.lavender.client.LavenderClient"
-		]
+		],
+		"cardinal-components": ["io.github.jadedchara.ashfall.common.cca.AshfallComponents"]
 	},
 	"mixins": [
 		"lavender.mixins.json"
 	],
+	"custom":{
+		"cardinal-components": [
+			"ashfall:anchors",
+			"ashfall:warpstones"
+		]
+	},
 	"depends": {
 		"fabricloader": ">=0.19.3",
 		"minecraft": "~1.19.2",
