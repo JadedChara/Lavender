@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:crimson_roots"
+    }
+  ],
+  "result": {
+    "item": "lavender:crimson_dye"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "item": "lavender:chartreuse_glazed_terracotta"
+  },
+  "result": "lavender:chartreuse_terracotta"
+}

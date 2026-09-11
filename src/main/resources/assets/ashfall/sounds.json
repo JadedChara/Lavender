@@ -1,0 +1,14 @@
+{
+  "feedback": {
+    "subtitle": "subtitles.ashfall.feedback",
+    "sounds": [
+      "ashfall:feedback"
+    ]
+  },
+  "pulse": {
+    "subtitle": "subtitles.ashfall.pulse",
+    "sounds": [
+      "ashfall:pulse"
+    ]
+  }
+}

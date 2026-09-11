@@ -1,0 +1,47 @@
+{
+	"schemaVersion": 1,
+	"id": "lavender",
+	"version": "${version}",
+	"name": "Lavender",
+	"description": "Totally inconspicuous decoration mod!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"accessWidener": "lavender.accesswidener",
+	"icon": "assets/lavender/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-datagen": [
+			"io.github.jadedchara.lavender.datagen.LavenderDataGenerator"
+		],
+		"main": [
+			"io.github.jadedchara.lavender.Lavender",
+			"io.github.jadedchara.ashfall.Ashfall",
+			"io.github.jadedchara.acelib.AceLib"
+		],
+		"client": [
+			"io.github.jadedchara.lavender.client.LavenderClient"
+		],
+		"cardinal-components": ["io.github.jadedchara.ashfall.common.cca.AshfallComponents"]
+	},
+	"mixins": [
+		"lavender.mixins.json"
+	],
+	"custom":{
+		"cardinal-components": [
+			"ashfall:anchors",
+			"ashfall:warpstones"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.19.2",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}

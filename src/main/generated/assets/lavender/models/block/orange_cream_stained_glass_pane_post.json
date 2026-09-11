@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_post",
+  "textures": {
+    "edge": "lavender:block/orange_cream_stained_glass_pane_top",
+    "pane": "lavender:block/orange_cream_stained_glass"
+  }
+}

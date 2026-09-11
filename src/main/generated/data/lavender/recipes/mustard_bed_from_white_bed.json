@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "dyed_bed",
+  "ingredients": [
+    {
+      "item": "minecraft:white_bed"
+    },
+    {
+      "item": "lavender:mustard_dye"
+    }
+  ],
+  "result": {
+    "item": "lavender:mustard_bed"
+  }
+}

@@ -1,0 +1,3 @@
+accessWidener v2 named
+
+accessible method net/minecraft/data/loot/EntityLoot createSheepTable (Lnet/minecraft/world/level/ItemLike;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
