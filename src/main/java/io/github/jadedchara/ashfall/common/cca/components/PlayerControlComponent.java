@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class PlayerControlComponent implements AutoSyncedComponent {
 
@@ -30,8 +31,13 @@ public class PlayerControlComponent implements AutoSyncedComponent {
     private HashMap<String, Integer> headmates = new HashMap<>();
     private String frontName = "";
     private int frontColor = 0xFFFFFF;
+    private boolean show  = false;
     private boolean applyGlitch = false;
     private boolean applyLoreName = false;
+    private boolean hideName = false;
+    private boolean visible = true;
+    private UUID disguise;
+    private boolean mimic = false;
 
     public PlayerControlComponent(Player player){
         this.storedPlayer = player;
@@ -71,7 +77,19 @@ public class PlayerControlComponent implements AutoSyncedComponent {
     public HashMap<String,Integer> getHeadmates(){
         return this.headmates;
     }
-
+    public void toggleShowFront(){
+        this.show = !this.show;
+        this.sync();
+    }
+    public boolean canShowFront(){
+        return this.show;
+    }
+    public String getFrontName(){
+        return this.frontName;
+    }
+    public int getFrontColor(){
+        return this.frontColor;
+    }
     public void setHeadmate(String n){
         this.frontName = n;
         this.frontColor = this.headmates.get(n);
@@ -81,7 +99,6 @@ public class PlayerControlComponent implements AutoSyncedComponent {
         this.headmates.put(n,c);
         this.sync();
     }
-
     public void modifyHeadmateName(String n, String newN){
         int t = this.headmates.get(n);
         this.headmates.remove(n);
@@ -118,18 +135,102 @@ public class PlayerControlComponent implements AutoSyncedComponent {
         this.sync();
     }
 
+
+
+
+
+    //LORE
+    public void toggleLoreName(){
+        this.applyLoreName = !this.applyLoreName;
+        this.sync();
+    }
+    public void toggleLoreFX(){
+        this.applyGlitch = !this.applyGlitch;
+        this.sync();
+    }
+    public boolean hasLoreName(){
+        return this.applyGlitch;
+    }
+    public boolean hasLoreFX(){
+        return this.applyLoreName;
+    }
+    public void toggleConcealName(){
+        this.hideName = !this.hideName;
+        this.sync();
+    }
+    public void toggleVisible(){
+        this.visible = !this.visible;
+        this.sync();
+    }
+    public boolean isVisible() {
+        return this.visible;
+    }
+    public boolean isAnon() {
+        return this.hideName;
+    }
+    public void toggleMimic(){
+        this.mimic = !this.mimic;
+        this.sync();
+    }
+    public void setDisguise(UUID d){
+        this.disguise = d;
+        this.sync();
+    }
+    public boolean isDisguised() {
+        if(this.disguise == null){
+            return false;
+        }
+        return this.mimic;
+    }
+    public UUID getDisguise() {
+        return this.disguise;
+    }
+
     //NBT Management
     public void sync(){
         PLAYER_INFO.sync(this.storedPlayer);
     }
 
     @Override
-    public void readFromNbt(CompoundTag compoundTag) {
+    public void readFromNbt(CompoundTag tag) {
+        this.headmates = new HashMap<>();
+        CompoundTag fetch = tag.getCompound("Headmates");
+        for(String n : fetch.getAllKeys()){
+            this.headmates.put(n, fetch.getInt(n));
+        }
+        this.disguise = tag.getUUID("Disguise");
+        this.visible = tag.getBoolean("Visible");
+        this.hideName = tag.getBoolean("Anon");
+        this.mimic = tag.getBoolean("Mimic");
+        this.applyGlitch = tag.getBoolean("applyFX");
+        this.applyLoreName = tag.getBoolean("applyName");
+        this.customName = tag.getString("CustomName");
+        this.color = tag.getInt("Color");
 
+        this.frontName = tag.getString("FrontName");
+        this.frontColor = tag.getInt("FrontColor");
+        this.show = tag.getBoolean("ShowFront");
     }
 
     @Override
-    public void writeToNbt(CompoundTag compoundTag) {
+    public void writeToNbt(CompoundTag tag) {
+        CompoundTag batch = new CompoundTag();
+        for(String n : this.headmates.keySet()){
+            batch.putInt(n,this.headmates.get(n));
+        }
+        tag.put("Headmates",batch);
+        tag.putString("FrontName",this.frontName);
+        tag.putInt("FrontColor",this.frontColor);
+        tag.putBoolean("ShowFront",this.show);
 
+        tag.putInt("Color",this.color);
+        tag.putString("CustomName",this.customName);
+        tag.putBoolean("applyFX",this.applyGlitch);
+        tag.putBoolean("applyName",this.applyLoreName);
+
+        tag.putBoolean("Anon",this.hideName);
+        tag.putBoolean("Visible",this.visible);
+        tag.putBoolean("Mimic",this.mimic);
+        tag.putUUID("Disguise",this.disguise);
     }
 }

@@ -1,6 +1,7 @@
 package io.github.jadedchara.ashfall.mixin.common;
 
 import com.mojang.authlib.GameProfile;
+import io.github.jadedchara.ashfall.common.cca.components.PlayerControlComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,18 +30,14 @@ public abstract class PlayerMixin implements Nameable {
         else{
             cir.setReturnValue(Component.literal(this.getGameProfile().getName()));
         }
-        if(this.getGameProfile().getId().equals(UUID.fromString("4d495917-0c94-4758-9e7d-b66a03f0d648"))){
-            MutableComponent devName = Component.literal("\ue780 ");
-            if(this.hasCustomName()){
-                devName.append(Component
-                        .literal(this.getCustomName().getString())
-                        .withStyle(ChatFormatting.ITALIC).withStyle(Style.EMPTY.withColor(0x3ED6BA)));
-            }else{
-                devName.append(Component
-                        .literal(this.getGameProfile().getName())
-                        .withStyle(ChatFormatting.ITALIC).withStyle(Style.EMPTY.withColor(0x3ED6BA)));
-            }
-            cir.setReturnValue(devName);
+        try{
+            PlayerControlComponent pcc = PlayerControlComponent.PLAYER_INFO.get(this);
+            if (pcc.hasLoreName()) {
+                cir.setReturnValue(Component.literal(pcc.getCustomName()).withStyle(Style.EMPTY.withColor(0x00c5cd)));
+            } else if (pcc.canShowFront())
+                cir.setReturnValue(Component.literal(pcc.getFrontName()).withStyle(Style.EMPTY.withColor(pcc.getFrontColor())));
+        }catch(Exception e){
+            //ignore for now
         }
     }
 

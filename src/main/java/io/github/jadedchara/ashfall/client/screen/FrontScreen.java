@@ -1,25 +1,25 @@
 package io.github.jadedchara.ashfall.client.screen;
 
 import io.github.jadedchara.ashfall.common.cca.components.PlayerControlComponent;
-import io.github.jadedchara.ashfall.common.cca.components.ScytheComponent;
-import io.github.jadedchara.ashfall.common.cca.components.WarpstoneComponent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
-public class ReaperScreen extends Screen {
-
+public class FrontScreen extends Screen {
     private Player storedPlayer;
     private PlayerControlComponent pcc;
-    private ScytheComponent sc;
 
-    protected ReaperScreen() {
-        super(Component.translatable("screen.reaper.main.controls"));
+    protected FrontScreen() {
+        super(Component.translatable("screen.front.main"));
 
     }
 
     @Override
     protected void init() {
+        storedPlayer = Minecraft.getInstance().player;
+        pcc = PlayerControlComponent.PLAYER_INFO.get(storedPlayer);
+
 
     }
 }

@@ -1,6 +1,7 @@
 package io.github.jadedchara.ashfall;
 
 
+import io.github.jadedchara.ashfall.common.networking.PluralPacketReceiver;
 import io.github.jadedchara.ashfall.common.registry.AshfallBlocks;
 import io.github.jadedchara.ashfall.common.registry.AshfallItems;
 import io.github.jadedchara.ashfall.common.registry.AshfallSounds;
@@ -21,6 +22,9 @@ public class Ashfall implements ModInitializer {
             AshfallItems.init();
             LOGGER.info("Booting sub-mod: [ASHFALL] from [LAVENDER]");
             LOGGER.info("Hello Fabric/Quilt world from Ashfall!");
+            //PACKET MANAGEMENT
+            PluralPacketReceiver.init();
+
         }
         public static ResourceLocation id(String path) {
         return new ResourceLocation(MOD_ID, path);
