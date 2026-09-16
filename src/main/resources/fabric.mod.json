@@ -30,7 +30,8 @@
 		"cardinal-components": ["io.github.jadedchara.ashfall.common.cca.AshfallComponents"]
 	},
 	"mixins": [
-		"lavender.mixins.json"
+		"lavender.mixins.json",
+		"ashfall.mixins.json"
 	],
 	"custom":{
 		"cardinal-components": [
