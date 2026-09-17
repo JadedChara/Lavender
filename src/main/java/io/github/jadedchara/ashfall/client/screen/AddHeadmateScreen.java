@@ -3,6 +3,7 @@ package io.github.jadedchara.ashfall.client.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.jadedchara.ashfall.client.screen.widget.HandledButton;
 import io.github.jadedchara.ashfall.common.cca.components.PlayerControlComponent;
+import io.github.jadedchara.ashfall.common.networking.CollectiveUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.Minecraft;
@@ -45,13 +46,8 @@ public class AddHeadmateScreen extends Screen {
         addButton = new HandledButton.Factory(
                 Component.translatable("button.add"),
                 (button)->{
-                    FriendlyByteBuf newHeadmate = PacketByteBufs.create();
-
-                    if(!nameField.getValue().equals("") && isInt(colorField.getValue())){
-                        newHeadmate.writeUtf(nameField.getValue());
-                        newHeadmate.writeVarInt(Integer.parseInt(colorField.getValue()));
-                        ClientPlayNetworking.send(new ResourceLocation("ashfall:addHeadmate"),newHeadmate);
-                        Minecraft.getInstance().setScreen(new FrontScreen());
+                    if(!CollectiveUtils.addHeadmate(nameField.getValue(), colorField.getValue())){
+                        //fail out
                     }
                 }
         ).dimensions(5,5,70,20).build();
