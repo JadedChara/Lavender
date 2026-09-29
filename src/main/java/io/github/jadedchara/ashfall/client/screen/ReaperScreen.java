@@ -1,8 +1,7 @@
 package io.github.jadedchara.ashfall.client.screen;
 
-import io.github.jadedchara.ashfall.common.cca.components.PlayerControlComponent;
+import io.github.jadedchara.ashfall.common.cca.components.SystemSettingsComponent;
 import io.github.jadedchara.ashfall.common.cca.components.ScytheComponent;
-import io.github.jadedchara.ashfall.common.cca.components.WarpstoneComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -10,7 +9,7 @@ import net.minecraft.world.entity.player.Player;
 public class ReaperScreen extends Screen {
 
     private Player storedPlayer;
-    private PlayerControlComponent pcc;
+    private SystemSettingsComponent pcc;
     private ScytheComponent sc;
 
     protected ReaperScreen() {

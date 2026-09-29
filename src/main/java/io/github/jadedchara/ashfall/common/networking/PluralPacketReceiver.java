@@ -1,72 +1,72 @@
 package io.github.jadedchara.ashfall.common.networking;
 
-import io.github.jadedchara.ashfall.common.cca.components.PlayerControlComponent;
+import io.github.jadedchara.ashfall.Ashfall;
+import io.github.jadedchara.ashfall.common.cca.components.SystemSettingsComponent;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.resources.ResourceLocation;
 
 public class PluralPacketReceiver {
     public static void init(){
         ServerPlayNetworking.registerGlobalReceiver(
-                new ResourceLocation("ashfall:addHeadmate"),
+                Ashfall.id("add_headmate"),
                 (server,sp,c,buf,sender)->{
                     String name = buf.readUtf();
-                    int color = buf.readInt();
-                    PlayerControlComponent.PLAYER_INFO.get(sp).addHeadmate(name,color);
+                    int color = buf.readVarInt();
+                    SystemSettingsComponent.PLAYER_INFO.get(sp).addHeadmate(name,color);
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(
-                new ResourceLocation("ashfall:removeHeadmate"),
+                Ashfall.id("remove_headmate"),
                 (server,sp,c,buf,sender)->{
                     String name = buf.readUtf();
 
-                    PlayerControlComponent.PLAYER_INFO.get(sp).removeHeadmate(name);
+                    SystemSettingsComponent.PLAYER_INFO.get(sp).removeHeadmate(name);
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(
-                new ResourceLocation("ashfall:modifyHeadmate"),
+                Ashfall.id("modify_headmate"),
                 (server,sp,c,buf,sender)->{
                     String name = buf.readUtf();
                     String newName = buf.readUtf();
-                    int newColor = buf.readInt();
+                    int newColor = buf.readVarInt();
 
-                    PlayerControlComponent.PLAYER_INFO.get(sp).modifyHeadmate(name,newName,newColor);
+                    SystemSettingsComponent.PLAYER_INFO.get(sp).modifyHeadmate(name,newName,newColor);
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(
-                new ResourceLocation("ashfall:changeHeadmateColor"),
+                Ashfall.id("change_headmate_color"),
                 (server,sp,c,buf,sender)->{
                     String name = buf.readUtf();
-                    int newColor = buf.readInt();
+                    int newColor = buf.readVarInt();
 
-                    PlayerControlComponent.PLAYER_INFO.get(sp).modifyHeadmateColor(name,newColor);
+                    SystemSettingsComponent.PLAYER_INFO.get(sp).modifyHeadmateColor(name,newColor);
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(
-                new ResourceLocation("ashfall:changeHeadmateName"),
+                Ashfall.id("change_headmate_name"),
                 (server,sp,c,buf,sender)->{
                     String name = buf.readUtf();
                     String newName = buf.readUtf();
 
-                    PlayerControlComponent.PLAYER_INFO.get(sp).modifyHeadmateName(name,newName);
+                    SystemSettingsComponent.PLAYER_INFO.get(sp).modifyHeadmateName(name,newName);
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(
-                new ResourceLocation("ashfall:toggleFront"),
+                Ashfall.id("toggle_front"),
                 (server,sp,c,buf,sender)->{
-                    PlayerControlComponent.PLAYER_INFO.get(sp).toggleShowFront();
+                    SystemSettingsComponent.PLAYER_INFO.get(sp).toggleShowFront();
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(
-                new ResourceLocation("ashfall:setFront"),
+                Ashfall.id("set_front"),
                 (server,sp,c,buf,sender)->{
                     String name = buf.readUtf();
-                    PlayerControlComponent.PLAYER_INFO.get(sp).setHeadmate(name);
+                    SystemSettingsComponent.PLAYER_INFO.get(sp).setHeadmate(name);
                 }
         );
         ServerPlayNetworking.registerGlobalReceiver(
-                new ResourceLocation("ashfall:clearSystem"),
+                Ashfall.id("clear_system"),
                 (server,sp,c,buf,sender)->{
-                    PlayerControlComponent.PLAYER_INFO.get(sp).clearSystem();
+                    SystemSettingsComponent.PLAYER_INFO.get(sp).clearSystem();
                 }
         );
     }

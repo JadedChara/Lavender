@@ -10,10 +10,10 @@ import net.minecraft.world.entity.player.Player;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class PlayerControlComponent implements AutoSyncedComponent {
+public class SystemSettingsComponent implements AutoSyncedComponent {
 
-    public static final ComponentKey<PlayerControlComponent> PLAYER_INFO =
-            ComponentRegistry.getOrCreate(Ashfall.id("player_info"), PlayerControlComponent.class);
+    public static final ComponentKey<SystemSettingsComponent> PLAYER_INFO =
+            ComponentRegistry.getOrCreate(Ashfall.id("system_info"), SystemSettingsComponent.class);
 
     //Defining values
     /*
@@ -36,10 +36,10 @@ public class PlayerControlComponent implements AutoSyncedComponent {
     private boolean applyLoreName = false;
     private boolean hideName = false;
     private boolean visible = true;
-    private UUID disguise;
+    private UUID disguise = UUID.randomUUID();
     private boolean mimic = false;
 
-    public PlayerControlComponent(Player player){
+    public SystemSettingsComponent(Player player){
         this.storedPlayer = player;
     }
 

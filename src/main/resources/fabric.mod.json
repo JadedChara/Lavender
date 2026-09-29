@@ -25,7 +25,8 @@
 			"io.github.jadedchara.acelib.AceLib"
 		],
 		"client": [
-			"io.github.jadedchara.lavender.client.LavenderClient"
+			"io.github.jadedchara.lavender.client.LavenderClient",
+			"io.github.jadedchara.ashfall.client.AshfallClient"
 		],
 		"cardinal-components": ["io.github.jadedchara.ashfall.common.cca.AshfallComponents"]
 	},
@@ -36,7 +37,8 @@
 	"custom":{
 		"cardinal-components": [
 			"ashfall:anchors",
-			"ashfall:warpstones"
+			"ashfall:warpstones",
+			"ashfall:system_info"
 		]
 	},
 	"depends": {
