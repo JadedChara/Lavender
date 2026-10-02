@@ -10,24 +10,24 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
-public class AddHeadmateScreen extends Screen {
-    private Player storedPlayer;
-    private SystemSettingsComponent pcc;
+public class EditHeadmateScreen extends Screen {
 
+    String storedName;
+    String storedColor;
     HandledButton backButton;
     HandledButton exitButton;
-    HandledButton addButton;
+    HandledButton editButton;
     EditBox nameField;
     EditBox colorField;
 
-    public AddHeadmateScreen() {
+    public EditHeadmateScreen(String name, int color) {
         super(Component.translatable("screen.front.add"));
+        this.storedName = name;
+        this.storedColor = String.format("0x%06x",color & 0xFFFFFF);
     }
 
     @Override
     protected void init() {
-        storedPlayer = Minecraft.getInstance().player;
-        pcc = SystemSettingsComponent.PLAYER_INFO.get(storedPlayer);
         backButton = new HandledButton.Factory(
                 Component.translatable("button.back"),
                 (button)->{Minecraft.getInstance().setScreen(new FrontScreen());},
@@ -42,24 +42,35 @@ public class AddHeadmateScreen extends Screen {
         colorField = new EditBox(this.font,this.width/2-50,65,100,20,Component.translatable("input.box.prompt.color"));
         colorField.setMaxLength(8);
 
-        addButton = new HandledButton.Factory(
-                Component.translatable("button.add"),
+        editButton = new HandledButton.Factory(
+                Component.translatable("button.update"),
                 (button)->{
                     String color = colorField.getValue();
                     if(!color.startsWith("0x")){
                         color = "0x"+ color;
                     }
-                    CollectiveUtils.addHeadmate(nameField.getValue(), color);
+                    if(!this.storedName.equals(nameField.getValue()) && !this.storedColor.equals(colorField.getValue())){
+                        CollectiveUtils.modifyHeadmate(this.storedName,nameField.getValue(), color);
+                    }else if(!this.storedName.equals(nameField.getValue())){
+                        CollectiveUtils.renameHeadmate(this.storedName,nameField.getValue());
+                    }else if(!this.storedColor.equals(colorField.getValue())){
+                        CollectiveUtils.recolorHeadmate(this.storedName,colorField.getValue());
+                    }else{
+                        Minecraft.getInstance().setScreen(new FrontScreen());
+                    }
+
                 },
-                (button,m,x,y)->{this.renderTooltip(m,Component.translatable("button.add"),x,y);}
+                (button,m,x,y)->{this.renderTooltip(m,Component.translatable("button.update"),x,y);}
         ).dimensions(this.width/2-50,90,100,20).build();
-        addButton.active = false;
+        editButton.active = false;
+        nameField.setValue(this.storedName);
+        colorField.setValue(this.storedColor);
 
         addRenderableWidget(backButton);
         addRenderableWidget(exitButton);
         addRenderableWidget(nameField);
         addRenderableWidget(colorField);
-        addRenderableWidget(addButton);
+        addRenderableWidget(editButton);
 
     }
     @Override
@@ -85,7 +96,7 @@ public class AddHeadmateScreen extends Screen {
 
     @Override
     public void tick() {
-        this.addButton.active= (
+        this.editButton.active = (
                 CollectiveUtils.isInt(this.colorField.getValue())
                         && !this.nameField.getValue().isEmpty()
                         && this.colorField.getValue().startsWith("0x")

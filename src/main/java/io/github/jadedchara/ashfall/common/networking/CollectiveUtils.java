@@ -1,13 +1,9 @@
 package io.github.jadedchara.ashfall.common.networking;
 
 import io.github.jadedchara.ashfall.Ashfall;
-import io.github.jadedchara.ashfall.client.screen.AddHeadmateScreen;
-import io.github.jadedchara.ashfall.client.screen.FrontScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 
 public class CollectiveUtils {
     public static boolean addHeadmate(String name, String color){
@@ -17,10 +13,6 @@ public class CollectiveUtils {
             newHeadmate.writeUtf(name);
             newHeadmate.writeVarInt(Integer.decode(color));
             ClientPlayNetworking.send(Ashfall.id("add_headmate"), newHeadmate);
-            if(Minecraft.getInstance().screen instanceof AddHeadmateScreen){
-                Minecraft.getInstance().setScreen(new FrontScreen());
-            }
-            //Minecraft.getInstance().setScreen(new FrontScreen());
             return true;
         }
         return false;
@@ -31,7 +23,6 @@ public class CollectiveUtils {
         if(!name.equals("")) {
             oldHeadmate.writeUtf(name);
             ClientPlayNetworking.send(Ashfall.id("remove_headmate"), oldHeadmate);
-            //Minecraft.getInstance().setScreen(new FrontScreen());
             return true;
         }
         return false;
@@ -44,7 +35,6 @@ public class CollectiveUtils {
             updatedHeadmate.writeUtf(newName);
             updatedHeadmate.writeVarInt(Integer.decode(newColor));
             ClientPlayNetworking.send(Ashfall.id("modify_headmate"), updatedHeadmate);
-            //Minecraft.getInstance().setScreen(new FrontScreen());
             return true;
         }
         return false;
@@ -56,7 +46,6 @@ public class CollectiveUtils {
             updatedHeadmate.writeUtf(name);
             updatedHeadmate.writeVarInt(Integer.decode(newColor));
             ClientPlayNetworking.send(Ashfall.id("change_headmate_color"), updatedHeadmate);
-            //Minecraft.getInstance().setScreen(new FrontScreen());
             return true;
         }
         return false;
@@ -68,7 +57,6 @@ public class CollectiveUtils {
             updatedHeadmate.writeUtf(name);
             updatedHeadmate.writeUtf(newName);
             ClientPlayNetworking.send(Ashfall.id("change_headmate_hame"), updatedHeadmate);
-            //Minecraft.getInstance().setScreen(new FrontScreen());
             return true;
         }
         return false;
@@ -77,7 +65,6 @@ public class CollectiveUtils {
         FriendlyByteBuf enableFront = PacketByteBufs.create();
         enableFront.writeInt(0);
         ClientPlayNetworking.send(Ashfall.id("toggle_front"), enableFront);
-        //Minecraft.getInstance().setScreen(new FrontScreen());
         return true;
     }
     public static boolean setFront(String name){
@@ -86,7 +73,6 @@ public class CollectiveUtils {
         if(!name.equals("")) {
             fronter.writeUtf(name);
             ClientPlayNetworking.send(Ashfall.id("set_front"), fronter);
-            //Minecraft.getInstance().setScreen(new FrontScreen());
             return true;
         }
         return false;
@@ -95,7 +81,6 @@ public class CollectiveUtils {
         FriendlyByteBuf fullWipe = PacketByteBufs.create();
         fullWipe.writeInt(0);
         ClientPlayNetworking.send(Ashfall.id("clear_system"), fullWipe);
-        //Minecraft.getInstance().setScreen(new FrontScreen());
         return true;
     }
 
