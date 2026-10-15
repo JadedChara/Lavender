@@ -84,7 +84,7 @@ public class HeadmateList extends ContainerObjectSelectionList<HeadmateList.Head
                     Component.translatable("headmate.remove"),
                     (b)->{
                         CollectiveUtils.removeHeadmate(headmateName);
-                        Minecraft.getInstance().setScreen(new FrontScreen());
+                        System.out.println("Removing: " + headmateName);
                         },
                     (button,bm,bx,by)->{});
             this.yeetableChildren = List.of(this.setFront,this.editHeadmate,this.removeHeadmate);
@@ -98,12 +98,13 @@ public class HeadmateList extends ContainerObjectSelectionList<HeadmateList.Head
 
         @Override
         public void render(PoseStack poseStack, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {
+            int horizontal = k+HeadmateList.this.maxWidth+7;
             this.setFront.y = j;
-            this.setFront.x = k+HeadmateList.this.maxWidth+7;
+            this.setFront.x = horizontal;
             this.editHeadmate.y=j;
-            this.editHeadmate.x = this.setFront.x+105;
+            this.editHeadmate.x = horizontal+105;
             this.removeHeadmate.y = j;
-            this.removeHeadmate.x = this.editHeadmate.x+55;
+            this.removeHeadmate.x = horizontal+160;
             fill(poseStack,k-5,j,k-4,j+20,0xFFDDDDDD);
             fill(poseStack,k+HeadmateList.this.maxWidth+3,j,k+HeadmateList.this.maxWidth+4,j+20,0xFFDDDDDD);
             fill(poseStack,k-5,j,k+HeadmateList.this.maxWidth+4,j+1,0xFFDDDDDD);
