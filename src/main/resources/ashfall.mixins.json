@@ -6,7 +6,6 @@
     "common.PlayerMixin"
   ],
   "client": [
-
   ],
   "injectors": {
     "defaultRequire": 1

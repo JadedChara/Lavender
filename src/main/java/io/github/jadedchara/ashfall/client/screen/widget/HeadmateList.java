@@ -22,8 +22,9 @@ public class HeadmateList extends ContainerObjectSelectionList<HeadmateList.Head
         super(client, i, j, k, l, m);
         this.stored = pcc;
         for(String val : stored.getHeadmates().keySet()){
-            if(client.font.width(FormattedText.of(val, Style.EMPTY.withColor(stored.getHeadmates().get(val))))>maxWidth) maxWidth =
-                    client.font.width(val);
+            if(client.font.width(FormattedText.of(val, Style.EMPTY.withColor(stored.getHeadmates().get(val))))>maxWidth){
+                maxWidth = client.font.width(val);
+            }
         }
         pcc.getHeadmates().keySet().forEach(h->{
             this.addEntry(new HeadmateEntry(h,pcc.getHeadmates().get(h)));
@@ -32,7 +33,7 @@ public class HeadmateList extends ContainerObjectSelectionList<HeadmateList.Head
 
     @Override
     public int getRowWidth() {
-        return 200;
+        return maxWidth+335;
     }
 
     @Override

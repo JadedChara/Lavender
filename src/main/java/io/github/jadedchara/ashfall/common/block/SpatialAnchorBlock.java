@@ -4,6 +4,7 @@ import io.github.jadedchara.ashfall.common.block.entity.SpatialAnchorBlockEntity
 import io.github.jadedchara.ashfall.common.cca.components.AnchorPositionComponent;
 import io.github.jadedchara.ashfall.common.cca.components.WarpstoneComponent;
 import io.github.jadedchara.ashfall.common.item.warpstone.AnchorWarpstoneItem;
+import io.github.jadedchara.ashfall.common.registry.AshfallBlocks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -38,9 +39,13 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
     public void onPlace(BlockState bs, Level l, BlockPos bp, BlockState bs2, boolean bl) {
         super.onPlace(bs, l, bp, bs2, bl);
         if(!l.isClientSide()){
-            AnchorPositionComponent.ANCHORS.maybeGet(l).get().addPosition(bp);
-            System.out.println("Added Anchor at: " + bp + " in " + l);
-            System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
+            if(l.getBlockEntity(bp) instanceof SpatialAnchorBlockEntity sabe){
+                if(sabe.validate(l,bp)){
+                    AnchorPositionComponent.ANCHORS.maybeGet(l).get().addPosition(bp);
+                    System.out.println("Added Anchor at: " + bp + " in " + l);
+                    System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
+                }
+            }
         }
     }
 
@@ -66,5 +71,14 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
             }
         }
         return super.use(bs, l, bp, p, hand, bhr);
+    }
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level l, BlockState bs, BlockEntityType<T> t) {
+        return t == AshfallBlocks.SPATIAL_ANCHOR_BLOCK_ENTITY ?
+                (level,bp,s,be)->{
+                    SpatialAnchorBlockEntity sabe = (SpatialAnchorBlockEntity) be;
+                    sabe.tick(level,bp,s,sabe);
+                } : null;
     }
 }
