@@ -8,13 +8,19 @@ import io.github.jadedchara.ashfall.common.registry.AshfallBlocks;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -51,6 +57,14 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
 
     @Override
     public void destroy(LevelAccessor la, BlockPos bp, BlockState bs) {
+        if(!la.isClientSide() && la.getBlockEntity(bp) instanceof SpatialAnchorBlockEntity sabe){
+            if(sabe.getPower() > 0){
+                for(int i = 0;i<sabe.getPower();i++){
+                    Containers.dropItemStack((Level) la,bp.getX(),bp.getY(),bp.getZ(),
+                            Items.AMETHYST_SHARD.getDefaultInstance());
+                }
+            }
+        }
         super.destroy(la, bp, bs);
         if(!la.isClientSide()){
             AnchorPositionComponent.ANCHORS.maybeGet(la).get().removePosition(bp);
@@ -64,10 +78,26 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState bs, Level l, BlockPos bp, Player p,
                                  InteractionHand hand, BlockHitResult bhr) {
-        if(!l.isClientSide()){
-            if(p.getItemInHand(hand).getItem() instanceof AnchorWarpstoneItem){
+        if(!l.isClientSide() && l.getBlockEntity(bp) instanceof SpatialAnchorBlockEntity sabe){
+            if(p.getItemInHand(hand).getItem() instanceof AnchorWarpstoneItem && sabe.valid){
                 WarpstoneComponent.WARPSTONES.maybeGet(p.getItemInHand(hand)).get().setBoundAnchor(bp);
                 p.sendSystemMessage(Component.literal("Binding Warpstone to a Spatial Anchor...").withStyle(ChatFormatting.AQUA));
+            }else if(p.getItemInHand(hand).getItem() == Items.AMETHYST_SHARD){
+                sabe.setPower(sabe.getPower()+1);
+                l.sendBlockUpdated(bp,bs,bs,3);
+                if(!p.getAbilities().instabuild){
+                    p.getItemInHand(hand).shrink(1);
+                }
+                if(p instanceof ServerPlayer sp){
+                    //l.playSound();
+                    sp.connection.send(new ClientboundSetTitlesAnimationPacket(10,40,10));
+                    sp.connection.send(new ClientboundSetActionBarTextPacket(Component
+                                    .literal("Charging Spatial Anchor: " +sabe.getPower()+ "/16")
+                                    .withStyle(ChatFormatting.LIGHT_PURPLE)
+                            )
+                    );
+                }
+
             }
         }
         return super.use(bs, l, bp, p, hand, bhr);
@@ -80,5 +110,9 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
                     SpatialAnchorBlockEntity sabe = (SpatialAnchorBlockEntity) be;
                     sabe.tick(level,bp,s,sabe);
                 } : null;
+    }
+    @Override
+    public RenderShape getRenderShape(BlockState blockState) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 }

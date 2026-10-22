@@ -5,21 +5,45 @@ import io.github.jadedchara.ashfall.common.registry.AshfallBlocks;
 import io.github.jadedchara.ashfall.common.registry.AshfallSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.AnimationState;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntityTicker<SpatialAnchorBlockEntity> {
+public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntityTicker<SpatialAnchorBlockEntity>, IAnimatable {
 
     private boolean powered = false;
     public boolean valid = false;
     private int tickSpacer = 0;
+    private int power = 0;
 
     public SpatialAnchorBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(AshfallBlocks.SPATIAL_ANCHOR_BLOCK_ENTITY, blockPos, blockState);
+    }
+
+    public int getPower(){
+        return this.power;
+    }
+
+    public void setPower(int f){
+        this.power = f;
+        this.setChanged();
     }
 
     @Override
@@ -45,14 +69,16 @@ public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntity
                     }
                 }else{
                     if(!be.valid){
-                        try{
-                            AnchorPositionComponent.ANCHORS.maybeGet(l).get().addPosition(bp);
-                            System.out.println("Added Anchor at: " + bp + " in " + l);
-                            System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
-                            be.valid = true;
-                            be.setChanged();
-                        }catch(Exception e){
-                            //
+                        if(be.getPower() >=16){
+                            try{
+                                AnchorPositionComponent.ANCHORS.maybeGet(l).get().addPosition(bp);
+                                System.out.println("Added Anchor at: " + bp + " in " + l);
+                                System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
+                                be.valid = true;
+                                be.setChanged();
+                            }catch(Exception e){
+                                //
+                            }
                         }
                     }
                 }
@@ -143,11 +169,75 @@ public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntity
         super.saveAdditional(nbt);
         nbt.putBoolean("charged", powered);
         nbt.putBoolean("valid",valid);
+        nbt.putInt("power",power);
     }
     @Override
     public void load(CompoundTag nbt) {
         super.load(nbt);
         powered = nbt.getBoolean("charged");
         valid = nbt.getBoolean("valid");
+        power = nbt.getInt("power");
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
+    }
+
+    //-----------------------------------------------------
+    //GECKOLIB-ification
+
+    protected static final AnimationBuilder ACTIVATE =
+            new AnimationBuilder().addAnimation("animation.anchor.activate",
+                    ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME);
+
+    protected static final AnimationBuilder SPIN = new AnimationBuilder().addAnimation("animation.anchor.spin",
+            ILoopType.EDefaultLoopTypes.LOOP);
+
+    protected static final AnimationBuilder IDLE =
+            new AnimationBuilder().addAnimation("animation.anchor.passive",ILoopType.EDefaultLoopTypes.LOOP);
+
+
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+
+
+    @Override
+    public void registerControllers(AnimationData d) {
+        d.addAnimationController(new AnimationController(this,"Main",0,this::mainController));
+    }
+
+    protected <E extends PotentConstructBlockEntity> PlayState mainController(final AnimationEvent<E> event) {
+
+        if(this.valid) {
+            if (event.getController().getCurrentAnimation() != null &&
+                    event.getController().getCurrentAnimation().animationName.equals("animation.anchor.spin")) {
+                return PlayState.CONTINUE;
+            }
+            if(event.getController().getCurrentAnimation() != null &&
+                    event.getController().getCurrentAnimation().animationName.equals("animation.anchor.activate")){
+                if(event.getController().getAnimationState() == AnimationState.Stopped){
+                    event.getController().setAnimation(SPIN);
+                }
+                return PlayState.CONTINUE;
+            }
+            event.getController().setAnimation(ACTIVATE);
+        }else{
+            if (event.getController().getCurrentAnimation() != null && !event.getController().getCurrentAnimation().animationName.equals("animation.anchor.passive")) {
+                event.getController().setAnimation(IDLE);
+            }
+        }
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return this.factory;
     }
 }

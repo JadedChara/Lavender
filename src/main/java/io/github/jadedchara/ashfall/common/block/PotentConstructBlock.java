@@ -1,6 +1,7 @@
 package io.github.jadedchara.ashfall.common.block;
 
 import io.github.jadedchara.ashfall.common.block.entity.PotentConstructBlockEntity;
+import io.github.jadedchara.ashfall.common.block.entity.SpatialAnchorBlockEntity;
 import io.github.jadedchara.ashfall.common.registry.AshfallBlocks;
 import io.github.jadedchara.ashfall.common.registry.AshfallSounds;
 import net.minecraft.ChatFormatting;
@@ -13,13 +14,16 @@ import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
 import net.minecraft.server.commands.TitleCommand;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -48,7 +52,7 @@ public class PotentConstructBlock extends Block implements EntityBlock {
                         try{
                             pcbe.setState(1);
                             pcbe.setQuantity(pcbe.getQuantity()+1);
-                            pcbe.setChanged();
+                            l.sendBlockUpdated(bp,bs,bs,3);
 
                             if(!p.getAbilities().instabuild){
                                 p.getItemInHand(hand).shrink(1);
@@ -74,6 +78,19 @@ public class PotentConstructBlock extends Block implements EntityBlock {
         return super.use(bs, l, bp, p, hand, result);
     }
 
+    @Override
+    public void destroy(LevelAccessor la, BlockPos bp, BlockState bs) {
+        if(!la.isClientSide() && la.getBlockEntity(bp) instanceof PotentConstructBlockEntity pcbe){
+            if(pcbe.getState() == 1 && pcbe.getQuantity() > 0){
+                for(int i = 0;i< pcbe.getQuantity();i++){
+                    Containers.dropItemStack((Level) la,bp.getX(),bp.getY(),bp.getZ(),
+                            Items.ENDER_PEARL.getDefaultInstance());
+                }
+            }
+        }
+        super.destroy(la, bp, bs);
+    }
+
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level l, BlockState bs, BlockEntityType<T> t) {
@@ -83,4 +100,10 @@ public class PotentConstructBlock extends Block implements EntityBlock {
                     pcbe.tick(level,bp,s,pcbe);
                 } : null;
     }
+
+    @Override
+    public RenderShape getRenderShape(BlockState blockState) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
+    }
 }
+

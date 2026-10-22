@@ -32,11 +32,11 @@ public class AshfallBlocks {
 
     //BLOCKS
     public static final SpatialAnchorBlock SPATIAL_ANCHOR_BLOCK = registerBlockItem(new SpatialAnchorBlock(
-            FabricBlockSettings.of(Material.METAL).strength(5f,5f)
+            FabricBlockSettings.of(Material.METAL).strength(5f,5f).nonOpaque().noOcclusion()
     ),"spatial_anchor",CreativeModeTab.TAB_REDSTONE);
 
     public static final PotentConstructBlock POTENT_CONSTRUCT_BLOCK = registerBlockItem(new PotentConstructBlock(
-            FabricBlockSettings.of(Material.METAL).strength(5f,5f)
+            FabricBlockSettings.of(Material.METAL).strength(5f,5f).nonOpaque().noOcclusion()
     ),"potent_construct",CreativeModeTab.TAB_REDSTONE);
 
     //BLOCKENTITIES

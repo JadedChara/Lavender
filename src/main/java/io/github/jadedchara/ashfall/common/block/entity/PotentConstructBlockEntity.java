@@ -1,10 +1,14 @@
 package io.github.jadedchara.ashfall.common.block.entity;
 
+import io.github.jadedchara.ashfall.common.block.PotentConstructBlock;
 import io.github.jadedchara.ashfall.common.registry.AshfallBlocks;
 import io.github.jadedchara.ashfall.common.registry.AshfallSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -12,8 +16,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class PotentConstructBlockEntity extends BlockEntity implements BlockEntityTicker<PotentConstructBlockEntity> {
+public class PotentConstructBlockEntity extends BlockEntity implements BlockEntityTicker<PotentConstructBlockEntity>, IAnimatable {
     //craft using four iron ingots, four iron nuggets, and 1 quartz
 
 
@@ -61,7 +75,7 @@ public class PotentConstructBlockEntity extends BlockEntity implements BlockEnti
     }
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-
+        this.setChanged();
     }
 
     public int getState() {
@@ -69,6 +83,7 @@ public class PotentConstructBlockEntity extends BlockEntity implements BlockEnti
     }
     public void setState(int state) {
         this.state = state;
+        this.setChanged();
     }
 
     @Override
@@ -82,5 +97,50 @@ public class PotentConstructBlockEntity extends BlockEntity implements BlockEnti
         super.load(nbt);
         state = nbt.getInt("state");
         quantity = nbt.getInt("quantity");
+    }
+
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
+    }
+
+
+    //-----------------------------------------------------
+    //GECKOLIB-ification
+
+    protected static final AnimationBuilder ACTIVATE =
+            new AnimationBuilder().addAnimation("animation.construct.activate", ILoopType.EDefaultLoopTypes.LOOP);
+
+    protected static final AnimationBuilder IDLE =
+            new AnimationBuilder().addAnimation("animation.construct.idle",ILoopType.EDefaultLoopTypes.LOOP);
+
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+
+
+    @Override
+    public void registerControllers(AnimationData d) {
+        d.addAnimationController(new AnimationController(this,"Main",0,this::mainController));
+    }
+
+    protected <E extends PotentConstructBlockEntity> PlayState mainController(final AnimationEvent<E> event) {
+        if(this.getState() == 1){
+            event.getController().setAnimation(ACTIVATE);
+        }else{
+            event.getController().setAnimation(IDLE);
+        }
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return this.factory;
     }
 }
