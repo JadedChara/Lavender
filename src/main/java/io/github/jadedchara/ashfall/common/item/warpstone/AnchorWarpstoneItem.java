@@ -41,14 +41,20 @@ public class AnchorWarpstoneItem extends WarpstoneItem {
             //Triggers the Warpstone if active
             if(targetWorld != null){
                 try{
+                    boolean validate = false;
                     ServerLevel sl = sp.getServer().getLevel(targetWorld);
                     BlockPos bp = AnchorPositionComponent.ANCHORS.maybeGet(sl).get().getRandomPosition();
+                    if(sl.getBlockEntity(warpstone.getBoundAnchor()) instanceof SpatialAnchorBlockEntity sabe){
+                        if(sabe.valid){
+                            validate = true;
+                        }
+                    }
                     if(warpstone.getBoundAnchor() != null){
                         if(
                                 sl.getBlockEntity(warpstone.getBoundAnchor()) != null
-                                        && sl.getBlockEntity(warpstone.getBoundAnchor()) instanceof SpatialAnchorBlockEntity
                                         && sl.getBlockState(warpstone.getBoundAnchor().above()).getBlock() instanceof AirBlock
                                         && sl.getBlockState(warpstone.getBoundAnchor().above().above()).getBlock() instanceof AirBlock
+                                        && validate
                         ){
                             bp = warpstone.getBoundAnchor();
                         }else{

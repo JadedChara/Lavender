@@ -26,6 +26,7 @@ public class DimensionalWarpstoneItem extends WarpstoneItem {
         super(properties);
     }
 
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level l, Player p, InteractionHand hand) {
 

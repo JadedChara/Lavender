@@ -3,6 +3,7 @@ package io.github.jadedchara.ashfall.common.registry;
 import io.github.jadedchara.ashfall.Ashfall;
 import io.github.jadedchara.ashfall.common.item.warpstone.AnchorWarpstoneItem;
 import io.github.jadedchara.ashfall.common.item.warpstone.DimensionalWarpstoneItem;
+import io.github.jadedchara.ashfall.common.item.warpstone.inverted.InvertedDimensionalWarpstoneItem;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -24,6 +25,11 @@ public class AshfallItems {
     public static final DimensionalWarpstoneItem DIMENSIONAL_WARPSTONE = registerItem(
             new DimensionalWarpstoneItem(new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)),
             "dimensional_warpstone"
+    );
+
+    public static final InvertedDimensionalWarpstoneItem INVERTED_DIMENSIONAL_WARPSTONE = registerItem(
+            new InvertedDimensionalWarpstoneItem(new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)),
+            "inverted_dimensional_warpstone"
     );
     //~~~~~~~~~~~~
     public static void init(){}

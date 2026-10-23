@@ -3,7 +3,8 @@ package io.github.jadedchara.ashfall.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import io.github.jadedchara.ashfall.client.render.block.PotentConstructRenderer;
 import io.github.jadedchara.ashfall.client.render.block.SpatialAnchorRenderer;
-import io.github.jadedchara.ashfall.client.screen.AddHeadmateScreen;
+import io.github.jadedchara.ashfall.client.render.block.model.item.SpatialAnchorItemModel;
+import io.github.jadedchara.ashfall.client.render.block.model.item.PotentConstructItemModel;
 import io.github.jadedchara.ashfall.client.screen.FrontScreen;
 import io.github.jadedchara.ashfall.common.networking.ClientPacketReceiver;
 import io.github.jadedchara.ashfall.common.registry.AshfallBlocks;
@@ -12,10 +13,12 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
+import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 public class AshfallClient implements ClientModInitializer {
     KeyMapping sysScreen;
@@ -42,6 +45,10 @@ public class AshfallClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(AshfallBlocks.SPATIAL_ANCHOR_BLOCK, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(AshfallBlocks.POTENT_CONSTRUCT_BLOCK, RenderType.cutout());
 
+        BuiltinItemRendererRegistry.INSTANCE.register(AshfallBlocks.SPATIAL_ANCHOR_BLOCK.asItem(),
+                new GeoItemRenderer<>(new SpatialAnchorItemModel()));
 
+        BuiltinItemRendererRegistry.INSTANCE.register(AshfallBlocks.POTENT_CONSTRUCT_BLOCK.asItem(),
+                new GeoItemRenderer<>(new PotentConstructItemModel()));
     }
 }

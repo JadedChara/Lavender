@@ -40,7 +40,9 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
     @Override
     public void removePosition(BlockPos bp) {
         try{
-            anchors.remove(bp);
+            for(BlockPos p : anchors){
+                anchors.remove(bp);
+            }
         }catch(Exception e){
             //ignore
         }

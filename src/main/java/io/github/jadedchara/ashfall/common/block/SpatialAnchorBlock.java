@@ -68,6 +68,7 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
         super.destroy(la, bp, bs);
         if(!la.isClientSide()){
             AnchorPositionComponent.ANCHORS.maybeGet(la).get().removePosition(bp);
+
             System.out.println("Removed Anchor at: " + bp + " in " + la);
             System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(la).get().getPositions());
 

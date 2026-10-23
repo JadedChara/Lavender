@@ -14,6 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.util.UUID;
+
 
 public class WarpstoneComponent extends ItemComponent implements NavigationalComponent {
     public static final ComponentKey<WarpstoneComponent> WARPSTONES =
@@ -30,12 +32,30 @@ public class WarpstoneComponent extends ItemComponent implements NavigationalCom
 
     @Override
     public ResourceKey<Level> getDimension() {
-        if(!this.hasTag("dimension")){
-            this.putString("dimension","");
+        if(!this.hasTag("dimension") || this.getString("dimension").isEmpty()){
+            this.remove("dimension");
             return null;
         }
         return ResourceKey.create(Registry.DIMENSION_REGISTRY,
                 new ResourceLocation(this.getString("dimension")));
+    }
+    public void setBoundEntity(UUID id){
+        this.putString("boundEntity",id.toString());
+        if (this.stack != null && this.stack.hasTag()) {
+            this.stack.setTag(this.stack.getTag());
+        }
+    }
+    public UUID getBoundEntity(){
+        if (!this.hasTag("boundEntity") || this.getString("boundEntity").isEmpty()) {
+            return null;
+        }
+        return UUID.fromString(this.getString("boundEntity"));
+    }
+    public void removeBoundEntity() {
+        this.remove("boundEntity");
+        if (this.stack != null && this.stack.hasTag()) {
+            this.stack.setTag(this.stack.getTag());
+        }
     }
 
     @Override
@@ -47,12 +67,13 @@ public class WarpstoneComponent extends ItemComponent implements NavigationalCom
     @Override
     public void removeBoundAnchor() {
         this.putCompound("Bound",new CompoundTag());
+
     }
 
     @Override
     public BlockPos getBoundAnchor() {
-        if(!this.hasTag("Bound")){
-            this.putCompound("Bound",new CompoundTag());
+        if(!this.hasTag("Bound") || this.getCompound("Bound").isEmpty()){
+            this.remove("Bound");
             return null;
         }
         return NbtUtils.readBlockPos(this.getCompound("Bound"));

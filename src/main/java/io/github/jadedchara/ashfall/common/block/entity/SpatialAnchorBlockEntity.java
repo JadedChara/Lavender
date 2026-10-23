@@ -69,15 +69,18 @@ public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntity
                     }
                 }else{
                     if(!be.valid){
-                        if(be.getPower() >=16){
+                        if(be.getPower()>=32){
+                            //
+                        }else if(be.getPower() >=16){
                             try{
                                 AnchorPositionComponent.ANCHORS.maybeGet(l).get().addPosition(bp);
                                 System.out.println("Added Anchor at: " + bp + " in " + l);
                                 System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
                                 be.valid = true;
                                 be.setChanged();
+                                l.sendBlockUpdated(bp,bs,bs,3);
                             }catch(Exception e){
-                                //
+
                             }
                         }
                     }

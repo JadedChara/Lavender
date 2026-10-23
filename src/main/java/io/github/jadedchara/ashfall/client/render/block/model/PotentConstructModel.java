@@ -7,12 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class PotentConstructModel extends AnimatedGeoModel<PotentConstructBlockEntity> {
-    public PotentConstructModel() {
-        super();
-
-    }
-
-
 
     @Override
     public ResourceLocation getModelResource(PotentConstructBlockEntity potentConstructBlockEntity) {
