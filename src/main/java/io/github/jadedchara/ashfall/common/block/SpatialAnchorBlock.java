@@ -56,20 +56,21 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        super.onRemove(blockState, level, blockPos, blockState2, bl);
-    }
-
-    @Override
-    public void destroy(LevelAccessor la, BlockPos bp, BlockState bs) {
-        if(!la.isClientSide() && la.getBlockEntity(bp) instanceof SpatialAnchorBlockEntity sabe){
+    public void onRemove(BlockState blockState, Level l, BlockPos bp, BlockState blockState2, boolean bl) {
+        if(!l.isClientSide() && l.getBlockEntity(bp) instanceof SpatialAnchorBlockEntity sabe){
             if(sabe.getPower() > 0){
                 for(int i = 0;i<sabe.getPower();i++){
-                    Containers.dropItemStack((Level) la,bp.getX(),bp.getY(),bp.getZ(),
+                    Containers.dropItemStack((Level) l,bp.getX(),bp.getY(),bp.getZ(),
                             Items.AMETHYST_SHARD.getDefaultInstance());
                 }
             }
         }
+        super.onRemove(blockState, l, bp, blockState2, bl);
+    }
+
+    @Override
+    public void destroy(LevelAccessor la, BlockPos bp, BlockState bs) {
+
         super.destroy(la, bp, bs);
         if(!la.isClientSide()){
             AnchorPositionComponent.ANCHORS.maybeGet(la).get().removePosition(bp);
