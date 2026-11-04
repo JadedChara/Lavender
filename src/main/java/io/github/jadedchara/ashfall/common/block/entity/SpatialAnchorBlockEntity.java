@@ -112,8 +112,8 @@ public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntity
         BlockPos base = mid.below();
             return (
                     /*air gap*/
-                    l.getBlockState(tip).getBlock() == Blocks.AIR
-                            &&l.getBlockState(tip).getBlock() == Blocks.AIR
+                    l.getBlockState(bp.above()).getBlock() == Blocks.AIR
+                            &&l.getBlockState(bp.above().above()).getBlock() == Blocks.AIR
                     /*pillar*/
                             && l.getBlockState(tip).getBlock() == Blocks.COBBLED_DEEPSLATE
                             && l.getBlockState(upper).getBlock() == Blocks.COBBLED_DEEPSLATE

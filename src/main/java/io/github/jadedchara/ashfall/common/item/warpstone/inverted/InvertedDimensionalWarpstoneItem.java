@@ -46,7 +46,9 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                     WarpstoneComponent.WARPSTONES.maybeGet(p.getItemInHand(hand)).get().setDimension(p.getLevel().dimension());
                     p.getItemInHand(hand).setTag(p.getItemInHand(hand).getOrCreateTag());
                     p.sendSystemMessage(Component.literal("Activating Warpstone and binding coordinates...").withStyle(ChatFormatting.DARK_AQUA));
-                    p.getCooldowns().addCooldown(p.getItemInHand(hand).getItem(),200);
+                    if(!p.getAbilities().instabuild){
+                        p.getCooldowns().addCooldown(p.getItemInHand(hand).getItem(),200);
+                    }
                 }
             }catch (Exception err){
                 //
@@ -75,6 +77,9 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                             if(ent == null){
                                 for (ServerLevel serverLevel : sp.getServer().getAllLevels()) {
                                     ent = serverLevel.getEntity(warpstone.getBoundEntity());
+                                    if (ent == null && serverLevel.entityManager != null) {
+                                        ent = serverLevel.entityManager.getEntityGetter().get(warpstone.getBoundEntity());
+                                    }
                                     if (ent != null) break;
                                 }
                             }
@@ -86,15 +91,18 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                                 ){
                                     bp = warpstone.getBoundAnchor();
                                     double xC = bp.getX()+0.5;
-                                    double yC = bp.getY();
+                                    double yC = bp.getY()+1;
                                     double zC = bp.getZ()+0.5;
                                     if(ent instanceof ServerPlayer pl){
                                         pl.teleportTo(sl,xC,yC,zC,sp.getYRot(),sp.getXRot());
                                     }else{
-                                        Objects.requireNonNull(ent.changeDimension(sl)).setPos(xC,yC,zC);
+                                        ent.setPos(xC,yC,zC);
+                                        ent.changeDimension(sl);
                                     }
                                     p.sendSystemMessage(Component.literal("Warping...").withStyle(ChatFormatting.AQUA));
-                                    sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
+                                    if(!p.getAbilities().instabuild){
+                                        sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
+                                    }
                                 }else{
                                     p.sendSystemMessage(
                                             Component
@@ -117,7 +125,6 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                     }
                 }
                 catch(Exception e){
-                    System.out.println(e);
                     p.sendSystemMessage(Component.literal("Warpstone error.").withStyle(ChatFormatting.DARK_RED));
                 }
             }
@@ -125,7 +132,9 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
             else{
                 p.sendSystemMessage(Component.literal("Activating Warpstone...").withStyle(ChatFormatting.DARK_AQUA));
                 WarpstoneComponent.WARPSTONES.maybeGet(sp.getItemInHand(hand)).get().setDimension(sp.getLevel().dimension());
-                sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),200);
+                if(!p.getAbilities().instabuild){
+                    sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),200);
+                }
 
             }
         }

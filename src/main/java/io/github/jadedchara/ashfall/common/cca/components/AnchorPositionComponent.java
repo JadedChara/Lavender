@@ -5,6 +5,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import io.github.jadedchara.ashfall.Ashfall;
 import io.github.jadedchara.ashfall.common.cca.util.PositionListComponent;
+import io.github.jadedchara.ashfall.common.registry.AshfallBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -61,9 +62,7 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
             return null;
         }
     }
-    public BlockPos getValidPosition(BlockPos bp) {
-        return null;
-    }
+
 
     @Override
     public List<BlockPos> getPositions() {
@@ -78,6 +77,12 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
 
     @Override
     public BlockPos getRandomPosition() {
+        for(BlockPos bp:this.getPositions()){
+            if(!(this.world.getBlockState(bp).getBlock() == AshfallBlocks.SPATIAL_ANCHOR_BLOCK)){
+                this.removePosition(bp);
+                this.update();
+            }
+        }
         if(!this.anchors.isEmpty()){
             return this.anchors.get((int) Math.floor(Math.random()*anchors.size()));
         }else{

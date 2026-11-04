@@ -44,12 +44,26 @@ public class AnchorWarpstoneItem extends WarpstoneItem {
                     boolean validate = false;
                     ServerLevel sl = sp.getServer().getLevel(targetWorld);
                     BlockPos bp = AnchorPositionComponent.ANCHORS.maybeGet(sl).get().getRandomPosition();
-                    if(sl.getBlockEntity(warpstone.getBoundAnchor()) instanceof SpatialAnchorBlockEntity sabe){
-                        if(sabe.valid){
-                            validate = true;
-                        }
+                    if(bp != null){
+                        sl.getChunkSource().addRegionTicket(
+                                net.minecraft.server.level.TicketType.POST_TELEPORT,
+                                sl.getChunk(bp).getPos(),
+                                1,
+                                sp.getId()
+                        );
                     }
-                    if(warpstone.getBoundAnchor() != null){
+                if(warpstone.getBoundAnchor() != null){
+                    sl.getChunkSource().addRegionTicket(
+                            net.minecraft.server.level.TicketType.POST_TELEPORT,
+                            sl.getChunk(warpstone.getBoundAnchor()).getPos(),
+                            1,
+                            sp.getId()
+                    );
+                    if(sl.getBlockEntity(warpstone.getBoundAnchor()) instanceof SpatialAnchorBlockEntity sabe){
+                            if(sabe.valid){
+                                validate = true;
+                            }
+                        }
                         if(
                                 sl.getBlockEntity(warpstone.getBoundAnchor()) != null
                                         && sl.getBlockState(warpstone.getBoundAnchor().above()).getBlock() instanceof AirBlock
@@ -97,7 +111,7 @@ public class AnchorWarpstoneItem extends WarpstoneItem {
 
             }
         }
-        return super.use(l, p, hand);
+        return InteractionResultHolder.sidedSuccess(p.getItemInHand(hand), l.isClientSide());
     }
 
 
