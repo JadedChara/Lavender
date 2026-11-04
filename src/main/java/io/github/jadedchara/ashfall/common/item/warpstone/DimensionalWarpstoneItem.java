@@ -52,7 +52,9 @@ public class DimensionalWarpstoneItem extends WarpstoneItem {
                             double zC = bp.getZ()+0.5;
                             sp.teleportTo(sl,xC,yC,zC,sp.getYRot(),sp.getXRot());
                             p.sendSystemMessage(Component.literal("Warping...").withStyle(ChatFormatting.AQUA));
-                            sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
+                            if(!p.getAbilities().instabuild){
+                                sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
+                            }
                         }else{
                             p.sendSystemMessage(
                                     Component
@@ -73,7 +75,9 @@ public class DimensionalWarpstoneItem extends WarpstoneItem {
             else{
                 p.sendSystemMessage(Component.literal("Activating Warpstone...").withStyle(ChatFormatting.DARK_AQUA));
                 WarpstoneComponent.WARPSTONES.maybeGet(sp.getItemInHand(hand)).get().setDimension(sp.getLevel().dimension());
-                sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),200);
+                if(!p.getAbilities().instabuild){
+                    sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),200);
+                }
 
             }
         }

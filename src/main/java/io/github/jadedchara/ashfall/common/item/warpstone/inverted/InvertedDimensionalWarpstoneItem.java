@@ -125,7 +125,10 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                     }
                 }
                 catch(Exception e){
-                    p.sendSystemMessage(Component.literal("Warpstone error.").withStyle(ChatFormatting.DARK_RED));
+                    p.sendSystemMessage(Component.literal(
+                            "Warpstone error. Potential entity may be inaccessible at this time...")
+                            .withStyle(ChatFormatting.DARK_RED)
+                    );
                 }
             }
             //Activates the Warpstone for its next usage;

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -37,41 +38,43 @@ public class AnchorWarpstoneItem extends WarpstoneItem {
             ServerPlayer sp = (ServerPlayer)p;
             WarpstoneComponent warpstone = WarpstoneComponent.WARPSTONES.maybeGet(sp.getItemInHand(hand)).get();
             ResourceKey<Level> targetWorld = warpstone.getDimension();
-
             //Triggers the Warpstone if active
-            if(targetWorld != null){
+            if(targetWorld != null && !sp.isCrouching()){
                 try{
-                    boolean validate = false;
                     ServerLevel sl = sp.getServer().getLevel(targetWorld);
-                    BlockPos bp = AnchorPositionComponent.ANCHORS.maybeGet(sl).get().getRandomPosition();
-                    if(bp != null){
-                        sl.getChunkSource().addRegionTicket(
-                                net.minecraft.server.level.TicketType.POST_TELEPORT,
-                                sl.getChunk(bp).getPos(),
-                                1,
-                                sp.getId()
-                        );
+
+                    //Datapack-relevant stuff...
+                    if (sl == null) {
+                        p.sendSystemMessage(Component.literal("Target dimension may not exist...").withStyle(ChatFormatting.DARK_RED));
+                        return InteractionResultHolder.sidedSuccess(p.getItemInHand(hand), false);
                     }
-                if(warpstone.getBoundAnchor() != null){
-                    sl.getChunkSource().addRegionTicket(
+                    BlockPos bp = null;
+
+                    //First check if there is a bound position to reference, and if so, load the area to test...
+                    if(warpstone.getBoundAnchor() != null){
+                        sl.getChunkSource().addRegionTicket(
                             net.minecraft.server.level.TicketType.POST_TELEPORT,
                             sl.getChunk(warpstone.getBoundAnchor()).getPos(),
                             1,
                             sp.getId()
-                    );
-                    if(sl.getBlockEntity(warpstone.getBoundAnchor()) instanceof SpatialAnchorBlockEntity sabe){
+                        );
+                        sl.getChunkSource().tick(() -> true, true);
+
+                        //Checks if now-loaded primary Bound is valid;
+                        if(sl.getBlockEntity(warpstone.getBoundAnchor()) instanceof SpatialAnchorBlockEntity sabe){
                             if(sabe.valid){
-                                validate = true;
+                                bp = warpstone.getBoundAnchor();
+                            }else{
+                                p.sendSystemMessage(
+                                        Component
+                                                .literal("Available Spatial Anchor is blocked or incomplete!")
+                                                .withStyle(ChatFormatting.DARK_RED)
+                                );
                             }
                         }
-                        if(
-                                sl.getBlockEntity(warpstone.getBoundAnchor()) != null
-                                        && sl.getBlockState(warpstone.getBoundAnchor().above()).getBlock() instanceof AirBlock
-                                        && sl.getBlockState(warpstone.getBoundAnchor().above().above()).getBlock() instanceof AirBlock
-                                        && validate
-                        ){
-                            bp = warpstone.getBoundAnchor();
-                        }else{
+                        //...or clear the Bound, assuming that an Anchor was NOT detected.
+                        else{
+                            AnchorPositionComponent.ANCHORS.maybeGet(sl).get().removePosition(warpstone.getBoundAnchor());
                             warpstone.removeBoundAnchor();
                             p.sendSystemMessage(
                                     Component
@@ -80,34 +83,65 @@ public class AnchorWarpstoneItem extends WarpstoneItem {
                             );
                         }
                     }
-                    double xC = bp.getX()+0.5;
-                    double yC = bp.getY()+1;
-                    double zC = bp.getZ()+0.5;
 
-                    //..teleport!
-                    if(
-                            sl.getBlockState(bp.above()).getBlock() instanceof AirBlock
-                                    && sl.getBlockState(bp.above().above()).getBlock() instanceof AirBlock
-                    ){
+                    //Check random positions for a valid coord...
+                    if(bp == null){
+                        List<BlockPos> refAnchors =
+                                new ArrayList<>(
+                                        AnchorPositionComponent.ANCHORS.maybeGet(sl).get().getPositions()
+                                );
+                        while(!refAnchors.isEmpty()){
+                            BlockPos testPos = refAnchors.remove(sl.random.nextInt(refAnchors.size()));
+                            sl.getChunkSource().addRegionTicket(
+                                    net.minecraft.server.level.TicketType.POST_TELEPORT,
+                                    new ChunkPos(testPos),
+                                    1,
+                                    sp.getId()
+                            );
+                            sl.getChunkSource().tick(() -> true, true);
+                            if (sl.getBlockEntity(testPos) instanceof SpatialAnchorBlockEntity sabe) {
+                                if(sabe.valid){
+                                    bp = testPos;
+                                    break;
+                                }
+                            }else{
+                                AnchorPositionComponent.ANCHORS.maybeGet(sl).get().removePosition(testPos);
+                            }
+                        }
+                    }
+
+                    //Commence teleporting!
+                    if(bp != null){
+                        double xC = bp.getX()+0.5;
+                        double yC = bp.getY()+1;
+                        double zC = bp.getZ()+0.5;
                         sp.teleportTo(sl,xC,yC,zC,sp.getYRot(),sp.getXRot());
                         p.sendSystemMessage(Component.literal("Warping...").withStyle(ChatFormatting.AQUA));
-                        sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
+                        if(!p.getAbilities().instabuild){
+                            sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
+                        }
                     }else{
-                        p.sendSystemMessage(Component.literal("Available Spatial Anchor is blocked!").withStyle(ChatFormatting.DARK_RED));
+                        p.sendSystemMessage(Component.literal("No Spatial Anchors accessible here at this time...").withStyle(ChatFormatting.DARK_RED));
                     }
+
 
                 }
                 //Error out if there's no affiliated anchor.
                 catch(Exception e){
                     System.out.println(e);
-                    p.sendSystemMessage(Component.literal("No Spatial Anchors accessible here at this time...").withStyle(ChatFormatting.DARK_RED));
+                    p.sendSystemMessage(Component.literal(
+                                    "Warpstone error.")
+                            .withStyle(ChatFormatting.DARK_RED)
+                    );
                 }
             }
             //Activates the Warpstone for its next usage;
             else{
                 p.sendSystemMessage(Component.literal("Activating Warpstone...").withStyle(ChatFormatting.DARK_AQUA));
                 WarpstoneComponent.WARPSTONES.maybeGet(sp.getItemInHand(hand)).get().setDimension(sp.getLevel().dimension());
-                sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),200);
+                if(!p.getAbilities().instabuild){
+                    sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),200);
+                }
 
             }
         }

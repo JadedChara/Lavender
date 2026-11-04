@@ -34,20 +34,17 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
 
     @Override
     public void addPosition(BlockPos bp) {
-        this.anchors.add(bp);
-        this.update();
+        if(!this.anchors.contains(bp)){
+            this.anchors.add(bp);
+            this.update();
+        }
     }
 
     @Override
     public void removePosition(BlockPos bp) {
-        try{
-            for(BlockPos p : anchors){
-                anchors.remove(bp);
-            }
-        }catch(Exception e){
-            //ignore
+        if(this.anchors.remove(bp)){
+            this.update();
         }
-        this.update();
     }
 
     @Override
@@ -71,18 +68,12 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
 
     @Override
     public void clearPositions() {
-        this.anchors = new ArrayList<>();
+        this.anchors.clear();
         this.update();
     }
 
     @Override
     public BlockPos getRandomPosition() {
-        for(BlockPos bp:this.getPositions()){
-            if(!(this.world.getBlockState(bp).getBlock() == AshfallBlocks.SPATIAL_ANCHOR_BLOCK)){
-                this.removePosition(bp);
-                this.update();
-            }
-        }
         if(!this.anchors.isEmpty()){
             return this.anchors.get((int) Math.floor(Math.random()*anchors.size()));
         }else{

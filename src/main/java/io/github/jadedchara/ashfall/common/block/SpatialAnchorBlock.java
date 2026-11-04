@@ -56,6 +56,11 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
     }
 
     @Override
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+        super.onRemove(blockState, level, blockPos, blockState2, bl);
+    }
+
+    @Override
     public void destroy(LevelAccessor la, BlockPos bp, BlockState bs) {
         if(!la.isClientSide() && la.getBlockEntity(bp) instanceof SpatialAnchorBlockEntity sabe){
             if(sabe.getPower() > 0){

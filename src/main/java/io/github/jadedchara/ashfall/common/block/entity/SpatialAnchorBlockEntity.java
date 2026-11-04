@@ -49,47 +49,36 @@ public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntity
     @Override
     public void tick(Level l, BlockPos bp, BlockState bs, SpatialAnchorBlockEntity be) {
         if(!l.isClientSide()){
-            if(l.hasNeighborSignal(bp)){
-                be.updateCharge(l,true);
-            }else{
-                be.updateCharge(l,false);
-            }
-            if(tickSpacer == 0){
+            be.updateCharge(l,l.hasNeighborSignal(bp));
+            if(be.tickSpacer == 0){
                 if(!be.validate(l,bp)){
                     if(be.valid){
-                        try{
-                            AnchorPositionComponent.ANCHORS.maybeGet(l).get().removePosition(bp);
-                            System.out.println("Removed Anchor at: " + bp + " in " + l);
-                            System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
-                            be.valid = false;
-                            be.setChanged();
-                        }catch(Exception e){
-                            //
-                        }
+                        AnchorPositionComponent.ANCHORS.maybeGet(l).get().removePosition(bp);
+                        System.out.println("Removed Anchor at: " + bp + " in " + l);
+                        System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
+                        be.valid = false;
+                        be.setChanged();
+                        l.sendBlockUpdated(bp,bs,bs,3);
                     }
                 }else{
                     if(!be.valid){
-                        if(be.getPower()>=32){
+                        /*if(be.getPower()>=32){
                             //
-                        }else if(be.getPower() >=16){
-                            try{
-                                AnchorPositionComponent.ANCHORS.maybeGet(l).get().addPosition(bp);
-                                System.out.println("Added Anchor at: " + bp + " in " + l);
-                                System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
-                                be.valid = true;
-                                be.setChanged();
-                                l.sendBlockUpdated(bp,bs,bs,3);
-                            }catch(Exception e){
-
-                            }
+                        }else*/ if(be.getPower() >=16){
+                            AnchorPositionComponent.ANCHORS.maybeGet(l).get().addPosition(bp);
+                            System.out.println("Added Anchor at: " + bp + " in " + l);
+                            System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
+                            be.valid = true;
+                            be.setChanged();
+                            l.sendBlockUpdated(bp,bs,bs,3);
                         }
                     }
                 }
-                tickSpacer++;
-            }else if(tickSpacer == 9){
-                tickSpacer = 0;
+                be.tickSpacer++;
+            }else if(be.tickSpacer == 9){
+                be.tickSpacer = 0;
             }else{
-                tickSpacer++;
+                be.tickSpacer++;
             }
         }
     }
@@ -112,8 +101,8 @@ public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntity
         BlockPos base = mid.below();
             return (
                     /*air gap*/
-                    l.getBlockState(bp.above()).getBlock() == Blocks.AIR
-                            &&l.getBlockState(bp.above().above()).getBlock() == Blocks.AIR
+                    l.getBlockState(bp.above()).isAir()
+                            &&l.getBlockState(bp.above().above()).isAir()
                     /*pillar*/
                             && l.getBlockState(tip).getBlock() == Blocks.COBBLED_DEEPSLATE
                             && l.getBlockState(upper).getBlock() == Blocks.COBBLED_DEEPSLATE
