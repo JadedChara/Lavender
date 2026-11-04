@@ -24,7 +24,7 @@
     },
     "gui": {
       "rotation": [33, 136, 0],
-      "translation": [0, 0, -4.25],
+      "translation": [0, 0, 0],
       "scale": [0.6, 0.6, 0.6]
     },
     "on_shelf": {

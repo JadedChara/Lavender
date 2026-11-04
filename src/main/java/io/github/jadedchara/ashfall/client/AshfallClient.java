@@ -1,8 +1,11 @@
 package io.github.jadedchara.ashfall.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import io.github.jadedchara.ashfall.client.render.block.ControlAnchorRenderer;
 import io.github.jadedchara.ashfall.client.render.block.PotentConstructRenderer;
 import io.github.jadedchara.ashfall.client.render.block.SpatialAnchorRenderer;
+import io.github.jadedchara.ashfall.client.render.block.model.ControlAnchorModel;
+import io.github.jadedchara.ashfall.client.render.block.model.item.ControlAnchorItemModel;
 import io.github.jadedchara.ashfall.client.render.block.model.item.SpatialAnchorItemModel;
 import io.github.jadedchara.ashfall.client.render.block.model.item.PotentConstructItemModel;
 import io.github.jadedchara.ashfall.client.screen.FrontScreen;
@@ -42,13 +45,18 @@ public class AshfallClient implements ClientModInitializer {
 
         BlockEntityRendererRegistry.register(AshfallBlocks.POTENT_CONSTRUCT_BLOCK_ENTITY, PotentConstructRenderer::new);
         BlockEntityRendererRegistry.register(AshfallBlocks.SPATIAL_ANCHOR_BLOCK_ENTITY, SpatialAnchorRenderer::new);
-        BlockRenderLayerMap.INSTANCE.putBlock(AshfallBlocks.SPATIAL_ANCHOR_BLOCK, RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(AshfallBlocks.POTENT_CONSTRUCT_BLOCK, RenderType.cutout());
+        BlockEntityRendererRegistry.register(AshfallBlocks.CONTROL_ANCHOR_BLOCK_ENTITY, ControlAnchorRenderer::new);
 
-        BuiltinItemRendererRegistry.INSTANCE.register(AshfallBlocks.SPATIAL_ANCHOR_BLOCK.asItem(),
-                new GeoItemRenderer<>(new SpatialAnchorItemModel()));
+        BlockRenderLayerMap.INSTANCE.putBlock(AshfallBlocks.POTENT_CONSTRUCT_BLOCK, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AshfallBlocks.SPATIAL_ANCHOR_BLOCK, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(AshfallBlocks.CONTROL_ANCHOR_BLOCK, RenderType.cutout());
 
         BuiltinItemRendererRegistry.INSTANCE.register(AshfallBlocks.POTENT_CONSTRUCT_BLOCK.asItem(),
                 new GeoItemRenderer<>(new PotentConstructItemModel()));
+        BuiltinItemRendererRegistry.INSTANCE.register(AshfallBlocks.SPATIAL_ANCHOR_BLOCK.asItem(),
+                new GeoItemRenderer<>(new SpatialAnchorItemModel()));
+        BuiltinItemRendererRegistry.INSTANCE.register(AshfallBlocks.CONTROL_ANCHOR_BLOCK.asItem(),
+                new GeoItemRenderer<>(new ControlAnchorItemModel()));
+
     }
 }

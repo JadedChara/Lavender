@@ -1,8 +1,10 @@
 package io.github.jadedchara.ashfall.common.registry;
 
 import io.github.jadedchara.ashfall.Ashfall;
+import io.github.jadedchara.ashfall.common.block.ControlAnchorBlock;
 import io.github.jadedchara.ashfall.common.block.PotentConstructBlock;
 import io.github.jadedchara.ashfall.common.block.SpatialAnchorBlock;
+import io.github.jadedchara.ashfall.common.block.entity.ControlAnchorBlockEntity;
 import io.github.jadedchara.ashfall.common.block.entity.PotentConstructBlockEntity;
 import io.github.jadedchara.ashfall.common.block.entity.SpatialAnchorBlockEntity;
 import io.github.jadedchara.ashfall.common.item.util.AnimatableBlockItem;
@@ -42,6 +44,10 @@ public class AshfallBlocks {
             FabricBlockSettings.of(Material.METAL).strength(5f,5f).nonOpaque().noOcclusion()
     ),"spatial_anchor",CreativeModeTab.TAB_REDSTONE);
 
+    public static final ControlAnchorBlock CONTROL_ANCHOR_BLOCK = registerAnimatableBlockItem(new ControlAnchorBlock(
+            FabricBlockSettings.of(Material.METAL).strength(5f,5f).nonOpaque().noOcclusion()
+    ),"control_anchor",CreativeModeTab.TAB_REDSTONE);
+
     public static final PotentConstructBlock POTENT_CONSTRUCT_BLOCK = registerAnimatableBlockItem(new PotentConstructBlock(
             FabricBlockSettings.of(Material.METAL).strength(5f,5f).nonOpaque().noOcclusion()
     ),"potent_construct",CreativeModeTab.TAB_REDSTONE);
@@ -50,6 +56,10 @@ public class AshfallBlocks {
     public static final BlockEntityType<SpatialAnchorBlockEntity> SPATIAL_ANCHOR_BLOCK_ENTITY = registerBlockEntity(
             "spatial_anchor_blockentity",BlockEntityType.Builder.of(SpatialAnchorBlockEntity::new,
                     SPATIAL_ANCHOR_BLOCK).build(null));
+    public static final BlockEntityType<ControlAnchorBlockEntity> CONTROL_ANCHOR_BLOCK_ENTITY = registerBlockEntity(
+            "control_anchor_blockentity",BlockEntityType.Builder.of(ControlAnchorBlockEntity::new,
+                    CONTROL_ANCHOR_BLOCK).build(null));
+
     public static final BlockEntityType<PotentConstructBlockEntity> POTENT_CONSTRUCT_BLOCK_ENTITY = registerBlockEntity(
             "potent_construct_blockentity",BlockEntityType.Builder.of(PotentConstructBlockEntity::new,
                     POTENT_CONSTRUCT_BLOCK).build(null));

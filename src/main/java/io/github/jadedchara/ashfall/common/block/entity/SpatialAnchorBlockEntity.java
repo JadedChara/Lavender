@@ -62,9 +62,9 @@ public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntity
                     }
                 }else{
                     if(!be.valid){
-                        /*if(be.getPower()>=32){
-                            //
-                        }else*/ if(be.getPower() >=16){
+                        if(be.getPower()>=32){
+                            be.upgradeProtocol(l,bp);
+                        }else if(be.getPower() >=16){
                             AnchorPositionComponent.ANCHORS.maybeGet(l).get().addPosition(bp);
                             System.out.println("Added Anchor at: " + bp + " in " + l);
                             System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
@@ -90,6 +90,12 @@ public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntity
             if(charge){
                 l.playSound(null,this.getBlockPos(), AshfallSounds.PULSE_EVENT, SoundSource.BLOCKS,0.5f,1.5f);
             }
+        }
+    }
+
+    public void upgradeProtocol(Level l, BlockPos bp){
+        if(!l.isClientSide){
+            l.setBlock(bp, AshfallBlocks.CONTROL_ANCHOR_BLOCK.defaultBlockState(),3);
         }
     }
 

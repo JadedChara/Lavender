@@ -3,6 +3,7 @@ package io.github.jadedchara.ashfall.common.item.warpstone.inverted;
 import io.github.jadedchara.ashfall.common.cca.components.WarpstoneComponent;
 import io.github.jadedchara.ashfall.common.item.util.WarpstoneItem;
 import io.github.jadedchara.ashfall.common.item.warpstone.DimensionalWarpstoneItem;
+import io.github.jadedchara.ashfall.mixin.common.ServerLevelAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -77,8 +78,13 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                             if(ent == null){
                                 for (ServerLevel serverLevel : sp.getServer().getAllLevels()) {
                                     ent = serverLevel.getEntity(warpstone.getBoundEntity());
-                                    if (ent == null && serverLevel.entityManager != null) {
-                                        ent = serverLevel.entityManager.getEntityGetter().get(warpstone.getBoundEntity());
+                                    if (ent == null && ((ServerLevelAccessor)serverLevel).getEntityManager() != null) {
+                                        ent =
+                                                ((ServerLevelAccessor)serverLevel)
+                                                        .getEntityManager()
+                                                        .getEntityGetter()
+                                                        .get(warpstone.getBoundEntity()
+                                                        );
                                     }
                                     if (ent != null) break;
                                 }
