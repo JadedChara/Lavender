@@ -33,7 +33,6 @@ public class WarpstoneComponent extends ItemComponent implements NavigationalCom
     @Override
     public ResourceKey<Level> getDimension() {
         if(!this.hasTag("dimension") || this.getString("dimension").isEmpty()){
-            this.remove("dimension");
             return null;
         }
         return ResourceKey.create(Registry.DIMENSION_REGISTRY,
@@ -41,9 +40,6 @@ public class WarpstoneComponent extends ItemComponent implements NavigationalCom
     }
     public void setBoundEntity(UUID id){
         this.putString("boundEntity",id.toString());
-        if (this.stack != null && this.stack.hasTag()) {
-            this.stack.setTag(this.stack.getTag());
-        }
     }
     public UUID getBoundEntity(){
         if (!this.hasTag("boundEntity") || this.getString("boundEntity").isEmpty()) {
@@ -53,9 +49,6 @@ public class WarpstoneComponent extends ItemComponent implements NavigationalCom
     }
     public void removeBoundEntity() {
         this.remove("boundEntity");
-        if (this.stack != null && this.stack.hasTag()) {
-            this.stack.setTag(this.stack.getTag());
-        }
     }
 
     @Override
@@ -66,7 +59,7 @@ public class WarpstoneComponent extends ItemComponent implements NavigationalCom
 
     @Override
     public void removeBoundAnchor() {
-        this.putCompound("Bound",new CompoundTag());
+        this.remove("Bound");
 
     }
 

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
@@ -36,8 +37,17 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                                                   InteractionHand hand) {
         if(!p.getLevel().isClientSide()){
             try{
-                WarpstoneComponent.WARPSTONES.maybeGet(i).get().setBoundEntity(e.getUUID());
-                p.sendSystemMessage(Component.literal("Bound to entity...").withStyle(ChatFormatting.DARK_AQUA));
+                if(WarpstoneComponent.WARPSTONES.maybeGet(p.getItemInHand(hand)).get().getBoundAnchor() != null){
+                    WarpstoneComponent.WARPSTONES.maybeGet(p.getItemInHand(hand)).get().setBoundEntity(e.getUUID());
+                    p.getItemInHand(hand).setTag(p.getItemInHand(hand).getOrCreateTag());
+                    p.sendSystemMessage(Component.literal("Bound to entity...").withStyle(ChatFormatting.DARK_AQUA));
+                }else{
+                    WarpstoneComponent.WARPSTONES.maybeGet(p.getItemInHand(hand)).get().setBoundAnchor(p.getOnPos());
+                    WarpstoneComponent.WARPSTONES.maybeGet(p.getItemInHand(hand)).get().setDimension(p.getLevel().dimension());
+                    p.getItemInHand(hand).setTag(p.getItemInHand(hand).getOrCreateTag());
+                    p.sendSystemMessage(Component.literal("Activating Warpstone and binding coordinates...").withStyle(ChatFormatting.DARK_AQUA));
+                    p.getCooldowns().addCooldown(p.getItemInHand(hand).getItem(),200);
+                }
             }catch (Exception err){
                 //
             }
@@ -61,9 +71,12 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                     if(warpstone.getBoundAnchor() != null && !sp.isCrouching()){
                         if(warpstone.getBoundEntity() != null){
                             Entity ent = null;
-                            for (ServerLevel serverLevel : sp.getServer().getAllLevels()) {
-                                ent = serverLevel.getEntity(warpstone.getBoundEntity());
-                                if (ent != null) break;
+                            ent = sp.getServer().getPlayerList().getPlayer(warpstone.getBoundEntity());
+                            if(ent == null){
+                                for (ServerLevel serverLevel : sp.getServer().getAllLevels()) {
+                                    ent = serverLevel.getEntity(warpstone.getBoundEntity());
+                                    if (ent != null) break;
+                                }
                             }
                             if(ent != null){
                                 if(
@@ -75,7 +88,11 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                                     double xC = bp.getX()+0.5;
                                     double yC = bp.getY();
                                     double zC = bp.getZ()+0.5;
-                                    sp.teleportTo(sl,xC,yC,zC,sp.getYRot(),sp.getXRot());
+                                    if(ent instanceof ServerPlayer pl){
+                                        pl.teleportTo(sl,xC,yC,zC,sp.getYRot(),sp.getXRot());
+                                    }else{
+                                        Objects.requireNonNull(ent.changeDimension(sl)).setPos(xC,yC,zC);
+                                    }
                                     p.sendSystemMessage(Component.literal("Warping...").withStyle(ChatFormatting.AQUA));
                                     sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
                                 }else{
@@ -95,10 +112,12 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                         }
                     }else{
                         warpstone.setBoundAnchor(sp.getOnPos());
+                        warpstone.setDimension(sp.getLevel().dimension());
                         p.sendSystemMessage(Component.literal("Binding coordinates...").withStyle(ChatFormatting.DARK_AQUA));
                     }
                 }
                 catch(Exception e){
+                    System.out.println(e);
                     p.sendSystemMessage(Component.literal("Warpstone error.").withStyle(ChatFormatting.DARK_RED));
                 }
             }

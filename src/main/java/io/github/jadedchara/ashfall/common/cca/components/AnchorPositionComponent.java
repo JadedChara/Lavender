@@ -61,6 +61,9 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
             return null;
         }
     }
+    public BlockPos getValidPosition(BlockPos bp) {
+        return null;
+    }
 
     @Override
     public List<BlockPos> getPositions() {

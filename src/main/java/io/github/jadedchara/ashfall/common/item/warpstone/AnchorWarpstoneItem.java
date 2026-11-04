@@ -85,6 +85,7 @@ public class AnchorWarpstoneItem extends WarpstoneItem {
                 }
                 //Error out if there's no affiliated anchor.
                 catch(Exception e){
+                    System.out.println(e);
                     p.sendSystemMessage(Component.literal("No Spatial Anchors accessible here at this time...").withStyle(ChatFormatting.DARK_RED));
                 }
             }
