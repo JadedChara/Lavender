@@ -3,6 +3,8 @@
   "package": "io.github.jadedchara.ashfall.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "common.EntityMixin",
+    "common.PlayerAccessor",
     "common.PlayerMixin",
     "common.ServerLevelAccessor"
   ],

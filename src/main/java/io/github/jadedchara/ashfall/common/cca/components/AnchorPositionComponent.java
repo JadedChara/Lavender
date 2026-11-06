@@ -23,6 +23,7 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
 
     private List<BlockPos> anchors = new ArrayList<>();
     private final Level world;
+    private boolean canWarp = true;
 
     public AnchorPositionComponent(Level l){
         this.world = l;
@@ -81,12 +82,22 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
         }
     }
 
+    public boolean warpAllowed(){
+        return this.canWarp;
+    }
+
+    public void allowWarps(boolean b){
+        this.canWarp = b;
+        this.update();
+    }
+
     @Override
     public void readFromNbt(CompoundTag tag) {
         this.anchors = new ArrayList<>();
         tag.getList("Anchors",CompoundTag.TAG_COMPOUND).forEach(l->{
             anchors.add(NbtUtils.readBlockPos((CompoundTag) l));
         });
+        this.canWarp = tag.getBoolean("canWarp");
     }
 
     @Override
@@ -96,5 +107,6 @@ public class AnchorPositionComponent implements PositionListComponent, AutoSynce
             lt.add(NbtUtils.writeBlockPos(anchor));
         });
         tag.put("Anchors",lt);
+        tag.putBoolean("canWarp",this.canWarp);
     }
 }

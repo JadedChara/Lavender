@@ -28,7 +28,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class SpatialAnchorBlockEntity extends BlockEntity implements BlockEntityTicker<SpatialAnchorBlockEntity>, IAnimatable {
 
-    private boolean powered = false;
+    public boolean powered = false;
     public boolean valid = false;
     private int tickSpacer = 0;
     private int power = 0;

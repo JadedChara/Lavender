@@ -45,9 +45,10 @@ public class PotentConstructBlock extends Block implements EntityBlock {
     @Override
     public InteractionResult use(BlockState bs, Level l, BlockPos bp, Player p,
                                  InteractionHand hand, BlockHitResult result) {
+        //SPATIAL ANCHOR
         if(p.getItemInHand(hand).getItem() == Items.ENDER_PEARL){
             if(l.getBlockEntity(bp) instanceof PotentConstructBlockEntity pcbe){
-                if(pcbe.getState()<2){
+                if(pcbe.getState()==1 ||pcbe.getState()==0 ){
                     if(!l.isClientSide()){
                         try{
                             pcbe.setState(1);
@@ -65,7 +66,36 @@ public class PotentConstructBlock extends Block implements EntityBlock {
                                                         .withStyle(ChatFormatting.DARK_AQUA)
                                         )
                                 );
-                                //sp.connection.send(new ClientboundSetTitleTextPacket(Component.literal("\u200b")));
+                            }
+                        }catch(Exception e){
+                            System.out.println("Error serializing block entity for Potent Construct at: " + bp);
+                        }
+                    }
+                    return InteractionResult.sidedSuccess(l.isClientSide());
+                }
+            }
+        }
+        //UNSTABLE CONSTRUCT
+        else if(p.getItemInHand(hand).getItem() == Items.ENDER_PEARL){
+            if(l.getBlockEntity(bp) instanceof PotentConstructBlockEntity pcbe){
+                if((pcbe.getState()==2 ||pcbe.getState()==0) ){
+                    if(!l.isClientSide()){
+                        try{
+                            pcbe.setState(1);
+                            pcbe.setQuantity(pcbe.getQuantity()+1);
+                            l.sendBlockUpdated(bp,bs,bs,3);
+
+                            if(!p.getAbilities().instabuild){
+                                p.getItemInHand(hand).shrink(1);
+                            }
+                            l.playSound(null,bp, AshfallSounds.FEEDBACK_EVENT, SoundSource.BLOCKS,1f,1f);
+                            if(p instanceof ServerPlayer sp){
+                                sp.connection.send(new ClientboundSetTitlesAnimationPacket(10,40,10));
+                                sp.connection.send(new ClientboundSetActionBarTextPacket(Component
+                                                .literal("Constructing Spatial Anchor: " +pcbe.getQuantity()+ "/16")
+                                                .withStyle(ChatFormatting.DARK_AQUA)
+                                        )
+                                );
                             }
                         }catch(Exception e){
                             System.out.println("Error serializing block entity for Potent Construct at: " + bp);
