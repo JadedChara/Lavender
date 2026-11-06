@@ -9,17 +9,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class PotentConstructModel extends AnimatedGeoModel<PotentConstructBlockEntity> {
 
     @Override
-    public ResourceLocation getModelResource(PotentConstructBlockEntity potentConstructBlockEntity) {
+    public ResourceLocation getModelResource(PotentConstructBlockEntity p) {
         return (Ashfall.id("geo/block/potent_construct.geo.json"));
     }
 
     @Override
-    public ResourceLocation getTextureResource(PotentConstructBlockEntity potentConstructBlockEntity) {
+    public ResourceLocation getTextureResource(PotentConstructBlockEntity p) {
         return (Ashfall.id("textures/block/potent_construct.png"));
     }
 
     @Override
-    public ResourceLocation getAnimationResource(PotentConstructBlockEntity potentConstructBlockEntity) {
+    public ResourceLocation getAnimationResource(PotentConstructBlockEntity p) {
         return (Ashfall.id("animations/block/potent_construct.animation.json"));
     }
 }

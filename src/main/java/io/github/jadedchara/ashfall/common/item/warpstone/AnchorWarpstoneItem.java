@@ -13,6 +13,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -35,7 +37,25 @@ public class AnchorWarpstoneItem extends WarpstoneItem {
     public InteractionResultHolder<ItemStack> use(Level l, Player p, InteractionHand hand) {
 
         if(!l.isClientSide()){
+
             ServerPlayer sp = (ServerPlayer)p;
+            try{
+                if(!AnchorPositionComponent.ANCHORS.maybeGet(l).get().warpAllowed()){
+                    sp.addEffect(new MobEffectInstance(MobEffects.GLOWING,600));
+                    sp.sendSystemMessage(
+                            Component
+                                    .literal("There is no escape this time...")
+                                    .withStyle(ChatFormatting.DARK_AQUA)
+                                    .withStyle(ChatFormatting.ITALIC)
+                    );
+                    if(!sp.getAbilities().instabuild){
+                        sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
+                    }
+                    return InteractionResultHolder.sidedSuccess(sp.getItemInHand(hand),p.getLevel().isClientSide());
+                }
+            }catch(Exception e){
+                //
+            }
             WarpstoneComponent warpstone = WarpstoneComponent.WARPSTONES.maybeGet(sp.getItemInHand(hand)).get();
             ResourceKey<Level> targetWorld = warpstone.getDimension();
             //Triggers the Warpstone if active

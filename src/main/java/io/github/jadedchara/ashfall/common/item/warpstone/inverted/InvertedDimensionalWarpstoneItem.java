@@ -1,5 +1,6 @@
 package io.github.jadedchara.ashfall.common.item.warpstone.inverted;
 
+import io.github.jadedchara.ashfall.common.cca.components.AnchorPositionComponent;
 import io.github.jadedchara.ashfall.common.cca.components.WarpstoneComponent;
 import io.github.jadedchara.ashfall.common.item.util.WarpstoneItem;
 import io.github.jadedchara.ashfall.common.item.warpstone.DimensionalWarpstoneItem;
@@ -13,6 +14,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -63,6 +66,23 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
 
         if(!l.isClientSide()){
             ServerPlayer sp = (ServerPlayer)p;
+            try{
+                if(!AnchorPositionComponent.ANCHORS.maybeGet(l).get().warpAllowed()){
+                    sp.addEffect(new MobEffectInstance(MobEffects.GLOWING,600));
+                    sp.sendSystemMessage(
+                            Component
+                                    .literal("We're afraid we can't let you do that...")
+                                    .withStyle(ChatFormatting.DARK_AQUA)
+                                    .withStyle(ChatFormatting.ITALIC)
+                    );
+                    if(!sp.getAbilities().instabuild){
+                        sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
+                    }
+                    return InteractionResultHolder.sidedSuccess(sp.getItemInHand(hand),p.getLevel().isClientSide());
+                }
+            }catch(Exception e){
+                //
+            }
             WarpstoneComponent warpstone = WarpstoneComponent.WARPSTONES.maybeGet(sp.getItemInHand(hand)).get();
             ResourceKey<Level> targetWorld = warpstone.getDimension();
 
@@ -105,7 +125,7 @@ public class InvertedDimensionalWarpstoneItem extends WarpstoneItem {
                                         ent.setPos(xC,yC,zC);
                                         ent.changeDimension(sl);
                                     }
-                                    p.sendSystemMessage(Component.literal("Warping...").withStyle(ChatFormatting.AQUA));
+                                    p.sendSystemMessage(Component.literal("Warping the target...").withStyle(ChatFormatting.AQUA));
                                     if(!p.getAbilities().instabuild){
                                         sp.getCooldowns().addCooldown(sp.getItemInHand(hand).getItem(),400);
                                     }

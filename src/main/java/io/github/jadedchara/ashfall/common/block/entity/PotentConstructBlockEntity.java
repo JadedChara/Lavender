@@ -36,7 +36,7 @@ public class PotentConstructBlockEntity extends BlockEntity implements BlockEnti
     * STATES
     * 0 - passive, listens for all items.
     * 1 - Spatial Anchor, listens for pearls
-    * 2 - Control Anchor, listens for ender eyes
+    * 2 -
     * 3 -
     * 4 -
     * */
@@ -55,6 +55,22 @@ public class PotentConstructBlockEntity extends BlockEntity implements BlockEnti
                 if(l instanceof ServerLevel sl){
                     sl.sendParticles(
                             ParticleTypes.PORTAL,
+                            bp.getX()+0.5,
+                            bp.getY()+0.5,
+                            bp.getZ()+0.5,
+                            30,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.45
+                    );
+                }
+                l.playSound(null,bp, AshfallSounds.PULSE_EVENT, SoundSource.BLOCKS,1f,0.5f);
+            } else if(be.state == 2 && be.quantity >= 16){
+                l.setBlock(bp, AshfallBlocks.SPATIAL_ANCHOR_BLOCK.defaultBlockState(),3);
+                if(l instanceof ServerLevel sl){
+                    sl.sendParticles(
+                            ParticleTypes.SMOKE,
                             bp.getX()+0.5,
                             bp.getY()+0.5,
                             bp.getZ()+0.5,

@@ -17,7 +17,7 @@ public abstract class EntityMixin {
 
     @Shadow public abstract Level getLevel();
 
-    @Inject(method="setPos(DDD)V",at=@At("HEAD"),cancellable = true)
+    /*@Inject(method="setPos(DDD)V",at=@At("HEAD"),cancellable = true)
     public void setPosBundle(double d, double e, double f, CallbackInfo ci){
         try{
             if(!this.getLevel().isClientSide()){
@@ -55,7 +55,7 @@ public abstract class EntityMixin {
         }catch(Exception err){
             //ignore in case of world shite.
         }
-    }
+    }*/
     @Inject(method="changeDimension",at=@At("HEAD"),cancellable = true)
     public void surpressDimensions(ServerLevel serverLevel, CallbackInfoReturnable<Entity> cir){
         try{

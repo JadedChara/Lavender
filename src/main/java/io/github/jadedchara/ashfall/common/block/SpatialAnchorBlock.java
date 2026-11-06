@@ -15,9 +15,9 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -58,28 +58,21 @@ public class SpatialAnchorBlock extends Block implements EntityBlock {
     @Override
     public void onRemove(BlockState blockState, Level l, BlockPos bp, BlockState blockState2, boolean bl) {
         if(!l.isClientSide() && l.getBlockEntity(bp) instanceof SpatialAnchorBlockEntity sabe){
+            ItemStack droppable = Items.AMETHYST_SHARD.getDefaultInstance();
             if(sabe.getPower() > 0){
-                for(int i = 0;i<sabe.getPower();i++){
-                    Containers.dropItemStack((Level) l,bp.getX(),bp.getY(),bp.getZ(),
-                            Items.AMETHYST_SHARD.getDefaultInstance());
-                }
+                droppable.setCount(sabe.getPower());
+                Containers.dropItemStack((Level) l,bp.getX(),bp.getY(),bp.getZ(),
+                            droppable);
             }
         }
         super.onRemove(blockState, l, bp, blockState2, bl);
-    }
+        if(!l.isClientSide()){
+            AnchorPositionComponent.ANCHORS.maybeGet(l).get().removePosition(bp);
 
-    @Override
-    public void destroy(LevelAccessor la, BlockPos bp, BlockState bs) {
-
-        super.destroy(la, bp, bs);
-        if(!la.isClientSide()){
-            AnchorPositionComponent.ANCHORS.maybeGet(la).get().removePosition(bp);
-
-            System.out.println("Removed Anchor at: " + bp + " in " + la);
-            System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(la).get().getPositions());
+            System.out.println("Removed Anchor at: " + bp + " in " + l);
+            System.out.println("All Anchors: " + AnchorPositionComponent.ANCHORS.maybeGet(l).get().getPositions());
 
         }
-
     }
 
     @Override
